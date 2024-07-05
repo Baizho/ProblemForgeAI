@@ -13,7 +13,7 @@ interface Message {
 }
 
 const ProblemText = (props: Props) => {
-    let text = props.text;
+    let text = props.text.replaceAll("$\\newline$", "\\n").replaceAll("\\newline", "\\n");
     let str = "", res = "", inside = 0;
 
     for (let i = 0; i < text.length; i += 1) {
@@ -30,22 +30,22 @@ const ProblemText = (props: Props) => {
             res += text[i];
         }
     }
-    console.log(res);
+    // console.log(res);
     text = res;
     res = "", str = "", inside = 0;
-    let first = 1;
     for (let i = 0; i < text.length; i += 1) {
-        if (text[i] === '\n' && !first) {
+        if (text[i] === '\n') {
             // console.log(i, text[i], text[i - 1]);
             if (str.length > 0) {
                 str += "~\\\\";
             } else str += "\\\\";
-            first = 0;
-        } else if (text[i] === '\n' && first) first = 0;
+        }
+        // else if (text[i] === ' ') {
+        //     console.log(i);
+        // }
         else {
-            first = 1;
             if (str) {
-                str += "~\\\\";
+                // str += "~\\\\";
                 // console.log(i, text[i], text[i - 1], str);
                 if (inside) res += `${str}`;
                 else res += `$${str}$`;
@@ -56,8 +56,9 @@ const ProblemText = (props: Props) => {
             }
             res += text[i];
         }
+
     } if (str) {
-        str += "~\\\\";
+        // str += "~\\\\";
         if (inside) res += `${str}`;
         else res += `$${str}$`;
     }

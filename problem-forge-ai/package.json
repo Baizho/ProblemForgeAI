@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@types/express": "^4.17.21",
     "@types/react-katex": "^3.0.4",
+    "ace-builds": "^1.35.2",
     "axios": "^1.7.2",
     "better-react-mathjax": "^2.0.3",
     "class-variance-authority": "^0.7.0",
@@ -20,11 +22,16 @@
     "express": "^4.19.2",
     "katex": "^0.16.10",
     "lucide-react": "^0.397.0",
+    "monaco-editor": "^0.50.0",
     "next": "14.2.4",
     "react": "^18",
+    "react-ace": "^12.0.0",
+    "react-ace-builds": "^7.4.1",
+    "react-ace-editor": "^0.0.3",
     "react-dom": "^18",
     "react-katex": "^3.0.1",
     "react-latex-next": "^3.0.0",
+    "react-simple-code-editor": "^0.14.1",
     "react-textarea-autosize": "^8.5.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
@@ -33,6 +40,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "file-loader": "^6.2.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

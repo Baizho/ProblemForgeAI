@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 import { Libre_Franklin } from 'next/font/google'
 import { Rubik } from 'next/font/google'
+import Script from "next/script";
 
 const libre = Libre_Franklin({
   subsets: ['latin'],
@@ -29,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${libre.className} ${rubi.className}`}>{children}</body>
+      <body className={`${inter.className} ${libre.className} ${rubi.className}`}>
+        {children}
+
+      </body>
     </html>
   );
 }
