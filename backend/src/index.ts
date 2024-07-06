@@ -67,7 +67,7 @@ app.post("/polygonAddProblemApiPuppeteer", async (req: Request, res: Response) =
     res.status(201).json({ message: "success?" });
 
   } catch (err: any) {
-    console.log("error creating problem", err);
+    console.log("error creating problem with api and puppeteer", err);
     res.status(500).json({ message: "error creating problem", err });
   }
 })

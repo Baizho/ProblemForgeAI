@@ -8,11 +8,13 @@ const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
 const geminiService = new GeminiService();
 
 const params = {
+    apiKey
 
 }
 
 const createSignature = () => {
-
+    params.apiKey = api_key;
+    params.time = Math.floor(Date.now() / 1000);
 }
 
 export default async function polygonAddProblemApiPuppeteer(title: string, statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, tests: string[], user: string, solution: string) {
