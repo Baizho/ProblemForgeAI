@@ -6,7 +6,8 @@ import cors from 'cors';
 import geminiRouter from "./gemini/gemini-router";
 import GeminiService from "./gemini/gemini-service";
 import { activate_test } from "./api/activate_test";
-import polygonAddProblem from "./polygon/polygon";
+import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
+import polygonAddProblemApiPuppeteer from "./polygon/polygon_api_puppeteer";
 
 const geminiService = new GeminiService();
 
@@ -40,14 +41,29 @@ app.post("/generateTests", async (req: Request, res: Response) => {
   }
 })
 
-// create polygon problem big code????????????????????????????????
-app.post("/polygonAddProblem", async (req: Request, res: Response) => {
+// create polygon problem using puppeteer
+app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
   const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol } = req.body;
   let solution: string = "";
   if (sol) solution = sol;
   else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes);
   try {
-    const file_link = await polygonAddProblem(title, statement, input, output, testInput, testOutput, notes, tests, user, solution);
+    const file_link = await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution);
+    res.status(201).json({ message: "success?" });
+
+  } catch (err: any) {
+    console.log("error creating problem", err);
+    res.status(500).json({ message: "error creating problem", err });
+  }
+})
+
+app.post("/polygonAddProblemApiPuppeteer", async (req: Request, res: Response) => {
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol } = req.body;
+  let solution: string = "";
+  if (sol) solution = sol;
+  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes);
+  try {
+    const file_link = await polygonAddProblemApiPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution);
     res.status(201).json({ message: "success?" });
 
   } catch (err: any) {

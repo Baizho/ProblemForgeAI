@@ -82,10 +82,6 @@ export default function Home() {
       alert("You forgot to generate tests");
       return;
     }
-    if (!user) {
-      alert("You forgot to add the login of a user");
-      return;
-    }
     const file_keys: string[] = [];
     testFiles.map((test, index) => {
       file_keys.push(test.key);
