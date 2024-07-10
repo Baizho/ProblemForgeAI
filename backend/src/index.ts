@@ -7,7 +7,7 @@ import geminiRouter from "./gemini/gemini-router";
 import GeminiService from "./gemini/gemini-service";
 import { activate_test } from "./api/activate_test";
 import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
-import polygonAddProblemApiPuppeteer from "./polygon/polygon_api_puppeteer";
+import polygonAddProblemApi from "./polygon/polygon_api";
 
 const geminiService = new GeminiService();
 
@@ -43,12 +43,12 @@ app.post("/generateTests", async (req: Request, res: Response) => {
 
 // create polygon problem using puppeteer
 app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol } = req.body;
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit } = req.body;
   let solution: string = "";
   if (sol) solution = sol;
-  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes);
+  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
   try {
-    const file_link = await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution);
+    const file_link = await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
     res.status(201).json({ message: "success?" });
 
   } catch (err: any) {
@@ -57,13 +57,13 @@ app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
   }
 })
 
-app.post("/polygonAddProblemApiPuppeteer", async (req: Request, res: Response) => {
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol } = req.body;
+app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit } = req.body;
   let solution: string = "";
   if (sol) solution = sol;
-  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes);
+  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
   try {
-    const file_link = await polygonAddProblemApiPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution);
+    const file_link = await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
     res.status(201).json({ message: "success?" });
 
   } catch (err: any) {

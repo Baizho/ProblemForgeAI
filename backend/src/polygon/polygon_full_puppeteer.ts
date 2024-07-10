@@ -33,7 +33,7 @@ const withPage = (browser: Browser) => async (fn) => {
 }
 
 
-export default async function polygonAddProblemPuppeteer(title: string, statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, tests: string[], user: string, solution: string) {
+export default async function polygonAddProblemPuppeteer(title: string, statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, tests: string[], user: string, solution: string, timeLimit: number, memoryLimit: number) {
     console.log("Running polygon!");
     const checker = await geminiService.getChecker(output);
 

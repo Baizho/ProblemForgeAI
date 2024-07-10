@@ -213,7 +213,7 @@ class GeminiService {
         }
     }
 
-    async generateSolution(statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string) {
+    async generateSolution(statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, timeLimit: number, memoryLimit: number) {
         try {
             const res = await genModelSolution.generateContent(`
             You are given the following competitive programming problem:
@@ -222,7 +222,9 @@ class GeminiService {
             output: ${output}, 
             sample input: ${testInput},
             sample output: ${testOutput},
-            sample explanation: ${notes}.
+            sample explanation: ${notes},
+            time limit: ${timeLimit} ms,
+            memory limit: ${memoryLimit} MB.
 
             Solve the problem and write your solution in C++ and return it.
             `)

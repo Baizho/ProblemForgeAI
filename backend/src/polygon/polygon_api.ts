@@ -7,17 +7,17 @@ const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
 
 const geminiService = new GeminiService();
 
-const params = {
-    apiKey
-
+interface paramsProp {
+    apiKey: string,
+    time: number,
 }
+
 
 const createSignature = () => {
-    params.apiKey = api_key;
-    params.time = Math.floor(Date.now() / 1000);
+    const params = { apiKey: api_key, time: Math.floor(Date.now() / 1000) };
 }
 
-export default async function polygonAddProblemApiPuppeteer(title: string, statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, tests: string[], user: string, solution: string) {
+export default async function polygonAddProblemApi(title: string, statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, tests: string[], user: string, solution: string, timeLimit: number, memoryLimit: number) {
     console.log("Running polygon!");
     const checker = await geminiService.getChecker(output);
 
