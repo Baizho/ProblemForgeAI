@@ -34,6 +34,9 @@ export default function Home() {
   const [testOutput, setTestOutput] = useState("");
   const [notes, setNotes] = useState("");
 
+  const [apiKey, setApiKey] = useState("");
+  const [secret, setSecret] = useState("");
+
   const [timeLimit, setTimeLimit] = useState(1000);
   const [memoryLimit, setMemoryLimit] = useState(256);
 
@@ -92,6 +95,11 @@ export default function Home() {
   }
 
   const submitPolygon = async () => {
+    if (!apiKey || !secret) {
+      alert("Please add your api key or secret");
+      setTab("Users");
+      return;
+    }
     if (error1 || error2) {
       alert("You have errors in your Constraints tab");
       return;
@@ -159,14 +167,14 @@ export default function Home() {
         <div id="problem" className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
           <div className=" bg-gray-100 p-6 flex flex-col h-full">
 
-            {tab === "Statement" && <Statement title={title} setTitle={setTitle} statement={statement} setStatement={setStatement} input={input} setInput={setInput} output={output} setOutput={setOutput} notes={notes} setNotes={setNotes} />}
+            {tab === "Statement" && <Statement title={title} setTitle={setTitle} statement={statement} setStatement={setStatement} input={input} setInput={setInput} output={output} setOutput={setOutput} testInput={testInput} setTestInput={setTestInput} testOutput={testOutput} setTestOutput={setTestOutput} notes={notes} setNotes={setNotes} />}
             {tab === "Constraints" && <Constraints error1={error1}
               setError1={setError1}
               error2={error2}
               setError2={setError2} timeLimit={timeLimit} setTimeLimit={setTimeLimit} memoryLimit={memoryLimit} setMemoryLimit={setMemoryLimit} />}
             {tab === "Tests" && <Tests testFiles={testFiles} handleTests={handleTests} countTests={countTests} setCountTests={setCountTests} testLoading={testLoading} />}
             {tab === "Solution" && <Solution sol={sol} setSol={setSol} generateSolution={generateSolution} />}
-            {tab === "Users" && <Users user={user} setUser={setUser} />}
+            {tab === "Users" && <Users user={user} setUser={setUser} apiKey={apiKey} setApiKey={setApiKey} secret={secret} setSecret={setSecret} />}
           </div>
 
           <div className=" bg-gray-100 p-6 flex flex-col">

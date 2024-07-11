@@ -10,11 +10,15 @@ type Props = {
     setInput: Dispatch<SetStateAction<string>>,
     output: string,
     setOutput: Dispatch<SetStateAction<string>>,
+    testInput: string,
+    setTestInput: Dispatch<SetStateAction<string>>,
+    testOutput: string,
+    setTestOutput: Dispatch<SetStateAction<string>>,
     notes: string,
     setNotes: Dispatch<SetStateAction<string>>,
 }
 
-const Statement = ({ title, setTitle, statement, setStatement, input, setInput, output, setOutput, notes, setNotes }: Props) => {
+const Statement = ({ title, setTitle, statement, setStatement, input, setInput, output, setOutput, testInput, setTestInput, testOutput, setTestOutput, notes, setNotes }: Props) => {
     return (
         <>
             <div className="bg-white p-8 rounded-lg shadow-lg w-full mt-[20px]">
@@ -58,6 +62,26 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                             id="output"
                             className="text-md font-mono shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-h-[90px]"
                             placeholder="Enter output details"
+                        ></TextareaAutosize>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="output">
+                            Sample Input
+                        </label>
+                        <TextareaAutosize value={testInput} onChange={(e) => { setTestInput(e.target.value) }}
+                            id="testInput"
+                            className="text-md font-mono shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-h-[70px]"
+                            placeholder=""
+                        ></TextareaAutosize>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="output">
+                            Sample Output
+                        </label>
+                        <TextareaAutosize value={testOutput} onChange={(e) => { setTestOutput(e.target.value) }}
+                            id="testOutput"
+                            className="text-md font-mono shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-h-[60px]"
+                            placeholder=""
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">

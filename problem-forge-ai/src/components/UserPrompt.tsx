@@ -12,7 +12,7 @@ const UserPrompt = ({ idea, setIdea, handleSubmit }: Props) => {
             {/* <!-- Hook --> */}
             <div className="text-center my-8">
                 <h1 className="text-4xl font-bold text-gray-800">Ignite the Competitive Spirit <br></br> Generate Coding Problems with AI  </h1>
-                <p className="mt-4 text-gray-600">Use our AI to turn your creative prompts into real challenges for the programming community</p>
+                <p className="mt-4 text-gray-600">Describe your problem idea and watch as our AI transforms it into a competitive programming problem.</p>
             </div>
 
             {/* <!-- Idea Prompt Input Field --> */}

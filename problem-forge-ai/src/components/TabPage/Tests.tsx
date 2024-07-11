@@ -31,11 +31,13 @@ const Tests = ({ testFiles, handleTests, countTests, setCountTests, testLoading 
                 </div>
                 <button type="submit" className="px-8 bg-gray-200 border-[1px] border-gray-600 text-md">Generate Tests</button>
             </form> */}
-            <div className="flex items-center justify-between mb-4">
-                <label htmlFor="number-of-tests" className="block text-gray-700 text-lg font-bold">Number of tests (minimum 5, maximum 99):</label>
-                <form className="flex items-center" onSubmit={(e) => { handleTests(e) }}>
-                    <input value={countTests} onChange={((e) => { const num = parseInt(e.target.value); { setCountTests(num) } })} type="number" id="number-of-tests" className="shadow appearance-none border rounded w-24 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2" placeholder="10" min="5" max="99" />
-                    <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Generate Tests</button>
+            <div className="flex items-center  mb-4">
+                <form className="flex items-center justify-between w-full" onSubmit={(e) => { handleTests(e) }}>
+                    <div className='flex items-center gap-x-2 '>
+                        <label htmlFor="number-of-tests" className="block text-gray-700 text-lg font-bold">Number of tests:</label>
+                        <input value={countTests} onChange={((e) => { const num = parseInt(e.target.value); { setCountTests(num) } })} type="number" id="number-of-tests" className="shadow appearance-none border rounded w-24 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2" placeholder="10" min="5" max="99" />
+                    </div>
+                    <button type="submit" className=" bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Generate Tests</button>
                 </form>
             </div>
             {testLoading && (
