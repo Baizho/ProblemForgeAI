@@ -113,7 +113,7 @@ export default function Home() {
       file_keys.push(test.key);
     })
     setPolygonLoading(true);
-    const res = await axiosBackInstance.post("/polygonAddProblem", {
+    const res = await axiosBackInstance.post("/polygonAddProblemPuppeteer", {
       title: title,
       statement: statement,
       input: input,
