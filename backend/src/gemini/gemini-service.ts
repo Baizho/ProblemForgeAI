@@ -134,15 +134,15 @@ const genModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 class GeminiService {
 
-    async getResult() {
-        try {
-            const res = await genModel.generateContent("Print me this sentences 'hello\\theworld\\hey'");
-            const mess = await res.response;
-            return mess.text();
-        } catch (err: any) {
-            console.log("there was an error getting the mesasge", err);
-        }
-    }
+    // async getResult() {
+    //     try {
+    //         const res = await genModel.generateContent("Print me this sentences 'hello\\theworld\\hey'");
+    //         const mess = await res.response;
+    //         return mess.text();
+    //     } catch (err: any) {
+    //         console.log("there was an error getting the mesasge", err);
+    //     }
+    // }
 
     async generateProblem(ideaPrompt: string, problemTopic: string, problemLevel: string, problemLanguage: string): Promise<string> {
         try {
@@ -218,7 +218,7 @@ class GeminiService {
             8. "std::rcmp9.cpp" - "Single or more double, max any error 1E-9",
             9. "std::wcmp.cpp" - "Sequence of tokens",
             10. "std::yesno.cpp" - "Single yes or no, case insensetive".
-            11. "std::none" - "If the checkers below aren't suitable for the output".
+            11. "std::none" - "If the checkers above aren't suitable for the output".
             Return the option you choose by its name.
             `)
             const result = await res.response;

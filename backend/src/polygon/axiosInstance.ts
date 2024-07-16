@@ -1,4 +1,5 @@
 import axios from "axios";
+import encodeurl from "encodeurl"
 
 const axiosPolygonInstance = axios.create({
     baseURL: 'https://polygon.codeforces.com/api', // Replace with your API base URL
@@ -14,6 +15,10 @@ axiosPolygonInstance.interceptors.request.use(
         // if (accessToken) {
         //     if (config.headers) config.headers.Authorization = `Bearer ${JSON.parse(accessToken).token}`;
         // }
+        if (config.url) {
+            config.url = encodeURI(config.url);
+        }
+        console.log(config.url);
         return config;
     },
     (error) => {

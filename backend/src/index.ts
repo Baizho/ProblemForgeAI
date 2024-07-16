@@ -1,84 +1,76 @@
 import "dotenv/config";
-import express from "express";
-import connectDB from "./db";
-import { Response, Request } from "express";
+import express, { Request, Response } from "express";
 import cors from 'cors';
+import connectDB from "./db";
 import geminiRouter from "./gemini/gemini-router";
 import GeminiService from "./gemini/gemini-service";
 import { activate_test } from "./api/activate_test";
 import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
 import polygonAddProblemApi from "./polygon/polygon_api";
-
-const geminiService = new GeminiService();
+import encodeurl from "encodeurl";
 
 const app = express();
+const geminiService = new GeminiService();
+
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 
-// connectDB();
+// Database connection
+// connectDB(); // Uncomment when you need to connect to the database
 
-// async function runIT() {
-//   const res = await activate_test("1");
-//   console.log(res);
-// }
-
-// runIT();
-
-// gemini
-
+// Routes
 app.use(geminiRouter);
 
-// generate Test api
+// Generate Tests API
 app.post("/generateTests", async (req: Request, res: Response) => {
   const { number, input, output } = req.body;
   try {
     const file_links = await activate_test(number.toString(), input, output);
-    console.log("Tests generated succesfully!");
-    res.status(201).json({ file_links: file_links });
+    console.log("Tests generated successfully!");
+    res.status(201).json({ file_links });
   } catch (err: any) {
-    console.log("error generating tests", err);
-    res.status(500).json({ message: "error generating tests", err });
+    console.error("Error generating tests", err);
+    res.status(500).json({ message: "Error generating tests", err });
   }
-})
+});
 
-// create polygon problem using puppeteer
+// Create Polygon problem using Puppeteer
 app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
   const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit } = req.body;
-  let solution: string = "";
-  if (sol) solution = sol;
-  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+
   try {
-    const file_link = await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
-    res.status(201).json({ message: "success?" });
-
+    await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
+    res.status(201).json({ message: "Problem created successfully!" });
   } catch (err: any) {
-    console.log("error creating problem", err);
-    res.status(500).json({ message: "error creating problem", err });
+    console.error("Error creating problem", err);
+    res.status(500).json({ message: "Error creating problem", err });
   }
-})
+});
 
+// Create Polygon problem using API
 app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit } = req.body;
-  let solution: string = "";
-  if (sol) solution = sol;
-  else solution = solution = await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+  // console.log(encodeURIComponent("//\ hello @#@  "));
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage } = req.body;
+  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+
   try {
-    const file_link = await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
-    res.status(201).json({ message: "success?" });
-
+    await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage);
+    res.status(201).json({ message: "Problem created successfully!" });
   } catch (err: any) {
-    console.log("error creating problem with api", err);
-    res.status(500).json({ message: "error creating problem", err });
+    console.error("Error creating problem with API", err);
+    res.status(500).json({ message: "Error creating problem", err });
   }
-})
+});
 
-app.post("/", async (req: Request, res: Response) => {
-  // const message = await geminiService.getResult();
-  // console.log(message);
-  // res.status(201).json(message);
-  res.status(201).json("it works");
-})
+// Root route
+app.post("/", async (_req: Request, res: Response) => {
+  res.status(201).json("It works!");
+});
 
-app.listen(process.env.PORT, () => {
-  console.log(`server running at http://localhost:${process.env.PORT}`);
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
