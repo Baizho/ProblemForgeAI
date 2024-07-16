@@ -72,6 +72,13 @@ app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
   }
 })
 
+app.post("/", async (req: Request, res: Response) => {
+  // const message = await geminiService.getResult();
+  // console.log(message);
+  // res.status(201).json(message);
+  res.status(201).json("it works");
+})
+
 app.listen(process.env.PORT, () => {
   console.log(`server running at http://localhost:${process.env.PORT}`);
 });

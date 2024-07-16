@@ -11,10 +11,10 @@ class GeminiController {
     }
 
     generateProblem = async (req: Request, res: Response): Promise<void> => {
-        const { ideaPrompt } = req.body;
+        const { ideaPrompt, problemTopic, problemLevel, problemLanguage } = req.body;
         try {
             // console.log("we are genearting?", this.geminiService);
-            const result = await this.geminiService.generateProblem(ideaPrompt);
+            const result = await this.geminiService.generateProblem(ideaPrompt, problemTopic, problemLevel, problemLanguage);
             res.status(201).json({ message: JSON.parse(result) });
         } catch (err: any) {
             console.log("error generating problem", err);

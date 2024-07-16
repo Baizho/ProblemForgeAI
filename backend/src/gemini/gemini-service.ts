@@ -130,13 +130,30 @@ const genModelProblem = genAI.getGenerativeModel({ model: "gemini-1.5-flash", sy
 const genModelTest = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPromptTest });
 const genModelChecker = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPromptChecker });
 const genModelSolution = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPromptSolution });
+const genModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 class GeminiService {
 
-    async generateProblem(ideaPrompt: string): Promise<string> {
+    async getResult() {
+        try {
+            const res = await genModel.generateContent("Print me this sentences 'hello\\theworld\\hey'");
+            const mess = await res.response;
+            return mess.text();
+        } catch (err: any) {
+            console.log("there was an error getting the mesasge", err);
+        }
+    }
+
+    async generateProblem(ideaPrompt: string, problemTopic: string, problemLevel: string, problemLanguage: string): Promise<string> {
         try {
             // console.log("you are generatig content!");
-            const res = await genModelProblem.generateContent(ideaPrompt + ` .Remember to use two backslashes otherwise it will not work!`);
+            const res = await genModelProblem.generateContent(ideaPrompt + `
+            Here are additional rules you must follow:
+            1. Return your answer in the language: ${problemLanguage}.
+            2. The problem will use the competitive programming topic: ${problemTopic}.
+            3. Make sure the problem is around the same complexity as your students wants, he wants a problem with complexity around: ${problemLevel}.
+            4. Remember to use two backslashes otherwise it will not work!
+             `);
             // console.log(res);
             const result = await res.response;
             // console.log(await result.text());
