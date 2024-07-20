@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -18,6 +18,16 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        markazi: ['"Markazi Text"'],
+        offside: ['Offside'],
+        kadwa: ['Kadwa'],
+        khula: ['Khula'],
+        kiwimaru: ['"Kiwi Maru"'],
+        fredoka: ['Fredoka'],
+        raleway: ['Raleway', 'sans-serif'],
+        syne: ['Syne']
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

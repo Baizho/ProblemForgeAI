@@ -23,6 +23,19 @@ const rubi = Rubik({
   display: 'swap',
 })
 
+import { Raleway } from 'next/font/google';
+import { Syne } from "next/font/google";
+
+const raleway = Raleway({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800'], // Specify the weights you want to use
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700']
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${libre.className} ${rubi.className}`}>
+      <body className={`${inter.className} ${libre.className} ${rubi.className} ${syne.className} ${raleway.className} `}>
         {children}
 
       </body>

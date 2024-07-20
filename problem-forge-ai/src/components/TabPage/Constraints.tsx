@@ -21,7 +21,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
 
                 {/* <!-- Time Limit --> */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time-limit">
+                    <label className="block text-gray-700 text-md font-bold mb-1" htmlFor="time-limit">
                         Time limit:
                     </label>
                     <div className="flex items-center">
@@ -33,7 +33,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
                                 setError1("Time limit must be divisible by 50");
                             } else if (!(250 <= num && num <= 15000)) { setError1("Time limit must be between 250ms and 15000ms") }
                             else setError1("");
-                        }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="time-limit" type="text" placeholder="1000" />
+                        }} className="font-mono shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="time-limit" type="text" placeholder="1000" />
                         <span className="ml-2 text-gray-700">ms</span>
                     </div>
                     {error1 && (
@@ -44,7 +44,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
 
                 {/* <!-- Memory Limit --> */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="memory-limit">
+                    <label className="block text-gray-700 text-md font-bold mb-1" htmlFor="memory-limit">
                         Memory limit:
                     </label>
                     <div className="flex items-center">
@@ -55,7 +55,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
                                 setError2("Invalid Memory Limit set (must be between 4 and 1024")
                             } else setError2("");
                             setMemoryLimit(num);
-                        }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="memory-limit" type="text" placeholder="256" />
+                        }} className="font-mono shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="memory-limit" type="text" placeholder="256" />
                         <span className="ml-2 text-gray-700">MB</span>
                     </div>
                     {error2 && (

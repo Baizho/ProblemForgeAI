@@ -24,18 +24,18 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
             <div className="bg-white p-8 rounded-lg shadow-lg w-full mt-[20px]">
                 <div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="name">
                             Name
                         </label>
                         <input value={title} onChange={(e) => { setTitle(e.target.value) }}
                             type="text"
                             id="name"
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border font-mono rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Enter problem name"
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statement">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="statement">
                             Statement
                         </label>
                         <TextareaAutosize value={statement} onChange={(e) => { setStatement(e.target.value) }}
@@ -45,7 +45,7 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="input">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="input">
                             Input
                         </label>
                         <TextareaAutosize value={input} onChange={(e) => { setInput(e.target.value) }}
@@ -55,7 +55,7 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="output">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="output">
                             Output
                         </label>
                         <TextareaAutosize value={output} onChange={(e) => { setOutput(e.target.value) }}
@@ -65,7 +65,7 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="output">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="output">
                             Sample Input
                         </label>
                         <TextareaAutosize value={testInput} onChange={(e) => { setTestInput(e.target.value) }}
@@ -75,7 +75,7 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="output">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="output">
                             Sample Output
                         </label>
                         <TextareaAutosize value={testOutput} onChange={(e) => { setTestOutput(e.target.value) }}
@@ -85,7 +85,7 @@ const Statement = ({ title, setTitle, statement, setStatement, input, setInput, 
                         ></TextareaAutosize>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="notes">
+                        <label className="block text-gray-700 text-md font-bold mb-2" htmlFor="notes">
                             Notes
                         </label>
                         <TextareaAutosize value={notes} onChange={(e) => { setNotes(e.target.value) }}

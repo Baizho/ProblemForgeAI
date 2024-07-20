@@ -122,9 +122,9 @@ You need to pick a checker by choosing from the options given to you.
 You must only return one of the options, you do not explain anything or write anything extra.
 `
 
-const systemPromptSolution = `You are a professional competitive programmer that solves problems using C++.
-You will be given a competitive programming problem. Return a solution to the problem in C++. 
-You provide only the C++ code, without explanations.`;
+const systemPromptSolution = `You are a professional competitive programmer that solves problems using any language.
+You will be given a competitive programming problem. Return a solution to the problem in the language requested.
+You provide only the code, without explanations.`;
 
 const genModelProblem = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPromptProblem, generationConfig: { "response_mime_type": "application/json" } });
 const genModelTest = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPromptTest });
@@ -144,6 +144,7 @@ class GeminiService {
     //     }
     // }
 
+    // 5. In the Input, Output sections, try to explain in detail of the format you will print characters or words or numbers.
     async generateProblem(ideaPrompt: string, problemTopic: string, problemLevel: string, problemLanguage: string): Promise<string> {
         try {
             // console.log("you are generatig content!");
@@ -165,7 +166,7 @@ class GeminiService {
         }
     }
 
-    async generateTestGenerater(input: string, output: string): Promise<string> {
+    async generateTestGenerater(input: string, output: string, testInput: string, testOutput: string): Promise<string> {
         try {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:
@@ -175,8 +176,11 @@ class GeminiService {
             4. Store file names in a 'file_names' array.
 
             Problem constraints:
-            Input: ${input}
+            Input: ${input},
             Output: ${output}
+
+            Here is an example test, try to make the format the same as this test, :
+            ${testInput}
 
             Requirements:
             - Generate random values within specified ranges.
@@ -230,7 +234,7 @@ class GeminiService {
         }
     }
 
-    async generateSolution(statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, timeLimit: number, memoryLimit: number) {
+    async generateSolution(statement: string, input: string, output: string, testInput: string, testOutput: string, notes: string, timeLimit: number, memoryLimit: number, userLang: string) {
         try {
             const res = await genModelSolution.generateContent(`
             You are given the following competitive programming problem:
@@ -243,12 +247,16 @@ class GeminiService {
             time limit: ${timeLimit} ms,
             memory limit: ${memoryLimit} MB.
 
-            Solve the problem and write your solution in C++ and return it.
+            Solve the problem and write your solution in ${userLang} and return it.
             `)
             const result = await res.response;
             const resText: string = result.text();
             // console.log(resText);
-            return resText.slice(7, resText.length - 3);;
+            if (userLang === "cpp") return resText.slice(7, resText.length - 3);
+            else if (userLang === "py") return resText.slice(9, resText.length - 3);
+            else if (userLang === "c") return resText.slice(4, resText.length - 3);
+            else if (userLang === "java") return resText.slice(8, resText.length - 3);
+            else return resText;
         } catch (err: any) {
             console.log("error in generating solution", err);
             return "error bruh";

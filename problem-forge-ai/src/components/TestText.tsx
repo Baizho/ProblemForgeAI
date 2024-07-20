@@ -20,8 +20,8 @@ const TestText = (props: Props) => {
     return (
         <div className="border border-gray-300 rounded-lg bg-white  p-4 shadow-md">
             <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
-                <span className="font-semibold text-gray-700">{name}</span>
-                <button onClick={toggleShowTest} className="bg-blue-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Show Test</button>
+                <span className="font-semibold text-gray-700 font-mono">{name}</span>
+                <button onClick={toggleShowTest} className=" font-raleway bg-blue-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Show Test</button>
             </div>
             {/* <div className="flex justify-between items-center">
                 <span className="font-bold">{name}</span>

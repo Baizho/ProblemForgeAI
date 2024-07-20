@@ -7,7 +7,7 @@ type Props = {
 
 const TabNavigation = ({ tab, setTab }: Props) => {
     return (
-        <div className="flex border-b border-gray-200 h-[40px]">
+        <div className="flex border-b border-gray-200 h-[40px] min-w-[150px] overflow-x-auto">
             {/* <!-- Statement Tab --> */}
             <button onClick={(e) => { setTab("Statement") }} className="flex items-center space-x-2 py-2 px-4 border-b-2 border-transparent hover:border-blue-500 text-gray-600 hover:text-blue-500 focus:outline-none focus:text-blue-500 focus:border-blue-500">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

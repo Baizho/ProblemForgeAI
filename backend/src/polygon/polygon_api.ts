@@ -3,8 +3,8 @@ import GeminiService from "../gemini/gemini-service";
 import axiosPolygonInstance from "./axiosInstance";
 import { sha512 } from "js-sha512";
 
-const api_key = process.env.CODEFORCES_POLYGON_KEY;
-const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
+// const api_key = process.env.CODEFORCES_POLYGON_KEY;
+// const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
 
 const geminiService = new GeminiService();
 
@@ -49,14 +49,9 @@ const getLink = async (slug: string, request: ApiParam[], apiKey: string, apiSec
             hash += "&";
             link += "&";
         }
-        if (req.param !== 'checker') {
-            hash += `${req.param}=${encodeURIComponent(req.value)}`;
-            link += `${req.param}=${encodeURIComponent(req.value)}`;
-        }
-        else {
-            hash += `${req.param}=${req.value}`;
-            link += `${req.param}=${req.value}`;
-        }
+        hash += `${req.param}=${req.value}`;
+        link += `${req.param}=${encodeURIComponent(req.value)}`;
+
     });
 
     hash += `#${apiSecret}`;
@@ -79,28 +74,102 @@ export default async function polygonAddProblemApi(
     solution: string,
     timeLimit: number,
     memoryLimit: number,
-    problemLanguage: string
+    problemLanguage: string,
+    userLang: string,
+    apiKey: string,
+    apiSecret: string
 ) {
     console.log("Running polygon!");
 
-    const checker = await geminiService.getChecker(output);
+    const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
     if (!api_key || !api_secret) return;
 
-    // const problem = await createNewProblem(title, api_key, api_secret);
-    const problem = { id: 370833 };
+    const problem = await createNewProblem(title, api_key, api_secret);
+    // const problem = { id: 370833 };
     if (problem) {
-        // await updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret);
-        // await updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret);
-        // await updateChecker(problem.id, checker, api_key, api_secret);
-        await updateSolution(problem.id, solution, api_key, api_secret);
+        await Promise.all([
+            updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
+            updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
+            updateChecker(problem.id, checker, api_key, api_secret),
+            updateSolution(problem.id, solution, userLang, api_key, api_secret),
+            updateSample(problem.id, testInput, testOutput, api_key, api_secret),
+            updateTests(problem.id, tests, api_key, api_secret),
+        ])
+        await commitChanges(problem.id, api_key, api_secret);
+        await buildPackage(problem.id, api_key, api_secret);
     }
 
     console.log("Polygon finished");
 }
 
+async function buildPackage(id: number, apiKey: string, apiSecret: string) {
+    try {
+        const link = await getLink("/problem.buildPackage?", [
+            { param: "apiKey", value: apiKey },
+            { param: "time", value: Math.round(Date.now() / 1000).toString() },
+            { param: "problemId", value: id.toString() },
+        ], apiKey, apiSecret);
+        await axiosPolygonInstance.get(link);
+    } catch (err: any) {
+        console.log("There is an error in building a package", err);
+    }
+}
+
+async function commitChanges(id: number, apiKey: string, apiSecret: string) {
+    try {
+        const link = await getLink("/problem.commitChanges?", [
+            { param: "apiKey", value: apiKey },
+            { param: "time", value: Math.round(Date.now() / 1000).toString() },
+            { param: "problemId", value: id.toString() },
+            { param: "minorChanges", value: "true" }
+        ], apiKey, apiSecret);
+        await axiosPolygonInstance.get(link);
+    } catch (err: any) {
+        console.log("There is an error in comitting changes", err);
+    }
+}
+
+async function updateTests(id: number, tests: string[], apiKey: string, apiSecret: string) {
+    try {
+        tests.forEach(async (testInput, index) => {
+            const link = await getLink("/problem.saveTest?", [
+                { param: "apiKey", value: apiKey },
+                { param: "time", value: Math.round(Date.now() / 1000).toString() },
+                { param: "problemId", value: id.toString() },
+                { param: "testset", value: "tests" },
+                { param: "testIndex", value: (index + 2).toString() },
+                { param: "testInput", value: testInput },
+            ], apiKey, apiSecret);
+
+            await axiosPolygonInstance.get(link);
+        });
+    } catch (err: any) {
+        console.log("There was an error adding sample tests", err);
+    }
+}
+
+async function updateSample(id: number, testInput: string, testOutput: string, apiKey: string, apiSecret: string) {
+    try {
+        const link = await getLink("/problem.saveTest?", [
+            { param: "apiKey", value: apiKey },
+            { param: "time", value: Math.round(Date.now() / 1000).toString() },
+            { param: "problemId", value: id.toString() },
+            { param: "testset", value: "tests" },
+            { param: "testIndex", value: "1" },
+            { param: "testInput", value: testInput },
+            { param: "testUseInStatements", value: "true" }
+        ], apiKey, apiSecret);
+
+        await axiosPolygonInstance.get(link);
+    } catch (err: any) {
+        console.log("There was an error adding sample tests", err);
+    }
+}
+
 async function createNewProblem(title: string, apiKey: string, apiSecret: string): Promise<ProblemProp | undefined> {
     try {
-        const problemName = `problem-${title.replace(/\s+/g, "-").toLowerCase()}-${uuid4()}`;
+        let problemName = `${title.replace(/[^a-zA-Z]/g, "").replace(/\s+/g, "-").toLowerCase()}-${uuid4()}`;
+        problemName = (problemName.length > 64 ? problemName.substring(0, 64) : problemName);
         const link = await getLink("/problem.create?", [
             { param: "apiKey", value: apiKey },
             { param: "time", value: Math.round(Date.now() / 1000).toString() },
@@ -127,6 +196,7 @@ async function updateConstraints(id: number, timeLimit: number, memoryLimit: num
         console.error("There is an error updating constraints", err);
     }
 }
+
 
 async function updateStatement(
     id: number,
@@ -172,13 +242,13 @@ async function updateChecker(id: number, checker: string, apiKey: string, apiSec
 }
 
 
-async function updateSolution(id: number, solution: string, apiKey: string, apiSecret: string): Promise<void> {
+async function updateSolution(id: number, solution: string, userLang: string, apiKey: string, apiSecret: string): Promise<void> {
     try {
         const link = await getLink("/problem.saveSolution?", [
             { param: "apiKey", value: apiKey },
             { param: "time", value: Math.round(Date.now() / 1000).toString() },
             { param: "problemId", value: id.toString() },
-            { param: "name", value: "main.cpp" },
+            { param: "name", value: `main.${userLang}` },
             { param: "file", value: solution }
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);

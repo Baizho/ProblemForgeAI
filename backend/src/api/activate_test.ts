@@ -1,5 +1,6 @@
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
 import * as fs from 'fs';
+import * as pfs from 'fs/promises';
 import * as path from 'path';
 import * as AWS from 'aws-sdk';
 import GeminiService from '../gemini/gemini-service';
@@ -50,18 +51,18 @@ async function uploadFile(fileName: string): Promise<string> {
 }
 
 interface fileProp {
-    key: string,
     content: string,
 }
 
 async function uploadFiles(fileNames: string[]) {
-    const file_links: fileProp[] = [];
+    const file_links: string[] = [];
     for await (const fileName of fileNames) {
         const filePath = outputDirectory + "/" + fileName;
-        const fileContent = fs.readFileSync(filePath).toString();
-        const key = await uploadFile(fileName);
+        const fileContent = (await pfs.readFile(filePath)).toString();
+        fs.unlinkSync(filePath);
+        // const key = await uploadFile(fileName);
         // console.log(link);
-        file_links.push({ key: key, content: fileContent.length > 500 ? fileContent.substring(0, 50) + '...' : fileContent });
+        file_links.push(fileContent);
     }
     return file_links;
 }
@@ -104,9 +105,9 @@ async function getFileFromS3(key: string): Promise<string> {
 
 
 
-async function activate_test(number: string, input: string, output: string) {
+async function activate_test(number: string, input: string, output: string, testInput: string, testOutput: string) {
     // The new code to be written into generate_test.py
-    const generate_code = await geminiService.generateTestGenerater(input, output);
+    const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
 
     // Function to replace file content
     async function replaceFileContent() {

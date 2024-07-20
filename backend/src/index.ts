@@ -7,14 +7,29 @@ import GeminiService from "./gemini/gemini-service";
 import { activate_test } from "./api/activate_test";
 import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
 import polygonAddProblemApi from "./polygon/polygon_api";
-import encodeurl from "encodeurl";
+import axios from "axios";
+import qs from 'qs';
+import bodyParser from "body-parser";
 
 const app = express();
 const geminiService = new GeminiService();
 
 // Middleware setup
-app.use(cors());
-app.use(express.json());
+
+const corsOptions = {
+  origin: '*',
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200
+}
+
+
+app.use(cors(corsOptions));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({
+  limit: '50mb',
+  extended: true,
+  parameterLimit: 50000
+}));
 
 // Database connection
 // connectDB(); // Uncomment when you need to connect to the database
@@ -24,9 +39,9 @@ app.use(geminiRouter);
 
 // Generate Tests API
 app.post("/generateTests", async (req: Request, res: Response) => {
-  const { number, input, output } = req.body;
+  const { number, input, output, testInput, testOutput } = req.body;
   try {
-    const file_links = await activate_test(number.toString(), input, output);
+    const file_links = await activate_test(number.toString(), input, output, testInput, testOutput);
     console.log("Tests generated successfully!");
     res.status(201).json({ file_links });
   } catch (err: any) {
@@ -37,8 +52,8 @@ app.post("/generateTests", async (req: Request, res: Response) => {
 
 // Create Polygon problem using Puppeteer
 app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit } = req.body;
-  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, userLang } = req.body;
+  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
 
   try {
     await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
@@ -49,14 +64,17 @@ app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
   }
 });
 
+
+
+
 // Create Polygon problem using API
 app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
   // console.log(encodeURIComponent("//\ hello @#@  "));
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage } = req.body;
-  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret } = req.body;
+  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
 
   try {
-    await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage);
+    await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret);
     res.status(201).json({ message: "Problem created successfully!" });
   } catch (err: any) {
     console.error("Error creating problem with API", err);
@@ -65,9 +83,52 @@ app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
 });
 
 // Root route
-app.post("/", async (_req: Request, res: Response) => {
+app.post("/", async (req: Request, res: Response) => {
   res.status(201).json("It works!");
 });
+
+app.post("/compile", async (req, res) => {
+  //getting the required data from the request
+  let code = req.body.code;
+  let language = req.body.language;
+  let input = req.body.input;
+  //calling the code compilation API
+  let data = qs.stringify({
+    'code': code,
+    'language': language,
+    'input': input
+  });
+  var config = {
+    method: 'post',
+    url: 'https://api.codex.jaagrav.in',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: data
+  };
+
+  try {
+    // console.log("sending compile", code);
+    console.log("sending compile")
+    const output = await axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.error) return response.data.error;
+        return response.data.output;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // console.log("finished compile", output);
+    console.log("finished output");
+    res.status(201).json(output);
+  } catch (err: any) {
+    console.log("There is an error in compiling the code", err);
+    res.status(400).json(err);
+  }
+
+
+})
 
 // Start server
 const PORT = process.env.PORT || 3000;

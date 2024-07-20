@@ -15,10 +15,10 @@ axiosPolygonInstance.interceptors.request.use(
         // if (accessToken) {
         //     if (config.headers) config.headers.Authorization = `Bearer ${JSON.parse(accessToken).token}`;
         // }
-        if (config.url) {
-            config.url = encodeURI(config.url);
-        }
-        console.log(config.url);
+        // if (config.url) {
+        //     config.url = encodeURI(config.url);
+        // }
+        // console.log(config.url);
         return config;
     },
     (error) => {

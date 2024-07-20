@@ -23,10 +23,12 @@ class GeminiController {
     }
 
     generateSolution = async (req: Request, res: Response): Promise<void> => {
-        const { statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit } = req.body;
+        const { statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang } = req.body;
         try {
-            // console.log("we are genearting?", this.geminiService);
-            const result = await this.geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit);
+            console.log("we are genearting?", this.geminiService);
+            const result = await this.geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
+            // console.log(result);
+            console.log("finished");
             res.status(201).json({ message: result });
         } catch (err: any) {
             console.log("error generating problem", err);
