@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React, { Dispatch, SetStateAction } from 'react'
 
 type Props = {
@@ -16,7 +17,7 @@ const Users = ({ user, setUser, apiKey, setApiKey, secret, setSecret }: Props) =
             <input value={user} onChange={(e) => { setUser(e.target.value) }} className="text-md px-[1.5px] border-[1px] border-gray-600 rounded-[2px] w-2/5 font-mono resize-none"></input> */}
             <div className='grid grid-cols-1 lg:grid-cols-2 w-full'>
                 <div className='flex flex-col w-full font-raleway text-lg'>
-                    Using Polygon API requires authorization. To authorize, you will need an API key, which can be generated on settings page
+                    Using Polygon API requires authorization. To authorize, you will need an API key, which can be generated on settings page <br></br><Link href="https://polygon.codeforces.com/">https://polygon.codeforces.com/</Link>
                 </div>
                 <div className='flex flex-col w-full'>
                     <label htmlFor="apiKey" className="font-semibold text-md w-full">User Api key</label>
