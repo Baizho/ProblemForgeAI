@@ -60,7 +60,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                             </>
                         ) : (
                             <>
-                                <h2 className="text-2xl font-bold mb-4 font-raleway"> Creating your problen in Polygon</h2>
+                                <h2 className="text-2xl font-bold mb-4 font-raleway"> Creating your problem to Polygon</h2>
                                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
                             </>
                         )}
@@ -123,7 +123,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                 >
-                    Did you finish the steps to share your problem?
+                    Did you finish the steps to add your problem?
                 </button>
             </div>
         </div>

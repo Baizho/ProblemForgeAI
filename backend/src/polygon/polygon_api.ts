@@ -108,6 +108,9 @@ async function buildPackage(id: number, apiKey: string, apiSecret: string) {
             { param: "apiKey", value: apiKey },
             { param: "time", value: Math.round(Date.now() / 1000).toString() },
             { param: "problemId", value: id.toString() },
+            { param: "full", value: "false" },
+            { param: "verify", value: "false" },
+
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
     } catch (err: any) {
