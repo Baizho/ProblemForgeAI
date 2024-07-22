@@ -103,7 +103,7 @@ async function getFileFromS3(key: string): Promise<string> {
 //     }
 // })();
 
-//this is a change
+//this is
 
 async function activate_test(number: string, input: string, output: string, testInput: string, testOutput: string) {
     // The new code to be written into generate_test.py
