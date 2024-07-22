@@ -66,7 +66,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                         )}
 
                         <div className="mb-4">
-                            <h3 className="text-xl font-semibold mb-2 font-raleway">{steps[currentStep].title}</h3>
+                            <h3 className="text-xl font-semibold mb-2 font-raleway text-blue-500">{steps[currentStep].title}</h3>
                             <p className=' font-raleway'>{steps[currentStep].description}</p>
                         </div>
 

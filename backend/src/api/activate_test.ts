@@ -103,7 +103,7 @@ async function getFileFromS3(key: string): Promise<string> {
 //     }
 // })();
 
-//this is
+//this is a change
 
 async function activate_test(number: string, input: string, output: string, testInput: string, testOutput: string) {
     // The new code to be written into generate_test.py
@@ -112,13 +112,7 @@ async function activate_test(number: string, input: string, output: string, test
     const scriptPath = path.join(process.cwd(), `/src/api/${file_name}.py`);
     // Function to replace file content
     async function replaceFileContent() {
-        fs.writeFile(scriptPath, generate_code, (err) => {
-            if (err) {
-                console.error(`Error writing to file: ${outputDirectory}`, err);
-            } else {
-                console.log(`File content replaced successfully: ${outputDirectory}`);
-            }
-        });
+        await pfs.writeFile(scriptPath, generate_code);
     }
 
     // Replace the content of generate_test.py
@@ -153,6 +147,7 @@ async function activate_test(number: string, input: string, output: string, test
 
         // Run the Python script
         const file_names = await spawnPromise('python', [scriptPath, number]);
+        fs.unlinkSync(scriptPath);
         // console.log(file_names);
 
         const file_links = await uploadFiles(file_names).catch(console.error);
@@ -161,7 +156,7 @@ async function activate_test(number: string, input: string, output: string, test
         // return NextResponse.json({message: "it worked!", res: stdout});
 
     } catch (error: any) {
-        // Handle any errors that occur
+        // Handle any errors that occur     
         return error;
     }
 }
