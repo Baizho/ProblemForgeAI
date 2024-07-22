@@ -17,7 +17,7 @@ const geminiService = new GeminiService();
 // Middleware setup
 
 const corsOptions = {
-  origin: '*',
+  origin: 'https://olympath-ai.vercel.app',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200
 }
