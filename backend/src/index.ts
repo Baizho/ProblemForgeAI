@@ -80,7 +80,7 @@ app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
 });
 
 // Root route
-app.post("/", async (req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
   res.status(201).json("It works!");
 });
 
