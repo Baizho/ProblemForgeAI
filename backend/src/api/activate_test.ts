@@ -147,10 +147,10 @@ async function activate_test(number: string, input: string, output: string, test
 
         // Run the Python script
         const file_names = await spawnPromise('python', [scriptPath, number]);
-        fs.unlinkSync(scriptPath);
         // console.log(file_names);
 
         const file_links = await uploadFiles(file_names).catch(console.error);
+        await pfs.unlink(scriptPath);
         // console.log(file_links);
         return file_links;
         // return NextResponse.json({message: "it worked!", res: stdout});

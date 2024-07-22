@@ -7,6 +7,14 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Competitive Programming Problem Generator",
   description: "Generate problems using codeforces polygon and AI",
+  icons: {
+    icon: '/logoOlympath Icon.png', // /public/favicon.ico
+    // or
+    // icon: [
+    //   { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    //   { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    // ],
+  },
 };
 
 import { Libre_Franklin } from 'next/font/google'
@@ -25,6 +33,7 @@ const rubi = Rubik({
 
 import { Raleway } from 'next/font/google';
 import { Syne } from "next/font/google";
+import Head from "next/head";
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -43,6 +52,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <body className={`${inter.className} ${libre.className} ${rubi.className} ${syne.className} ${raleway.className} `}>
         {children}
 

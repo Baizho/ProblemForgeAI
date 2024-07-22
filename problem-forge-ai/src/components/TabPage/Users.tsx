@@ -21,9 +21,9 @@ const Users = ({ user, setUser, apiKey, setApiKey, secret, setSecret }: Props) =
                 </div>
                 <div className='flex flex-col w-full'>
                     <label htmlFor="apiKey" className="font-semibold text-sm w-full">User Api key</label>
-                    <input value={apiKey} onChange={(e) => { setApiKey(e.target.value) }} className="text-sm px-[1.5px] border-[1px] border-gray-600 rounded-[2px] w-full font-mono resize-none"></input>
+                    <input value={apiKey} type="password" onChange={(e) => { setApiKey(e.target.value) }} className="text-sm px-[1.5px] border-[1px] border-gray-600 rounded-[2px] w-full font-mono resize-none"></input>
                     <label htmlFor="secret" className="font-semibold text-sm">User Secret</label>
-                    <input value={secret} onChange={(e) => { setSecret(e.target.value) }} className="text-sm px-[1.5px] border-[1px] border-gray-600 rounded-[2px] w-full font-mono resize-none"></input>
+                    <input value={secret} type="password" onChange={(e) => { setSecret(e.target.value) }} className="text-sm px-[1.5px] border-[1px] border-gray-600 rounded-[2px] w-full font-mono resize-none"></input>
                 </div>
             </div>
         </>

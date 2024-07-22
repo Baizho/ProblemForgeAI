@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// const axiosBackInstance = axios.create({
+//     baseURL: 'http://localhost:5000', // Replace with your API base URL
+// });
+
 const axiosBackInstance = axios.create({
-    baseURL: 'http://localhost:5000', // Replace with your API base URL
+    baseURL: 'https://problem-forge-ai-backend.vercel.app', // Replace with your API base URL
 });
 
 // Request interceptor
