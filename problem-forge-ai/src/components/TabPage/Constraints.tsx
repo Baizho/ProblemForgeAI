@@ -21,7 +21,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
 
                 {/* <!-- Time Limit --> */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-md font-bold mb-1" htmlFor="time-limit">
+                    <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="time-limit">
                         Time limit:
                     </label>
                     <div className="flex items-center">
@@ -44,7 +44,7 @@ const Constraints = ({ error1, setError1, error2, setError2, timeLimit, setTimeL
 
                 {/* <!-- Memory Limit --> */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-md font-bold mb-1" htmlFor="memory-limit">
+                    <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="memory-limit">
                         Memory limit:
                     </label>
                     <div className="flex items-center">

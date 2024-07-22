@@ -20,6 +20,7 @@ import { AnimatedGridPatternDemo } from "@/components/GridBg";
 import Image from "next/image";
 import logo from "@/../public/logoOlympath.png";
 import Link from "next/link";
+import LoadingModal from "@/components/LoadingModal";
 
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
   const [userTheme, setUserTheme] = useState("vs-dark");
 
   // State variable to set editors default font size
-  const [fontSize, setFontSize] = useState(20);
+  const [fontSize, setFontSize] = useState(15);
 
   // State variable to set users input
   const [userInput, setUserInput] = useState("");
@@ -71,6 +72,7 @@ export default function Home() {
   const [error2, setError2] = useState("");
 
   const [polygonLoading, setPolygonLoading] = useState(false);
+  const [isProcessComplete, setIsProcessComplete] = useState(false);
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -109,59 +111,69 @@ export default function Home() {
       return;
     }
     setTestLoading(true);
-    const res = await axiosBackInstance.post("/generateTests", {
-      number: countTests,
-      input: input,
-      output: output,
-      testInput: testInput,
-      testOutput: testOutput
-    });
-    const files = res.data.file_links;
+    try {
+      const res = await axiosBackInstance.post("/generateTests", {
+        number: countTests,
+        input: input,
+        output: output,
+        testInput: testInput,
+        testOutput: testOutput
+      });
+      const files = res.data.file_links;
+      setTestFiles(files);
+    } catch (err: any) {
+      alert("There was an error generating tests");
+    }
     // console.log(file_links);
     setTestLoading(false);
-    setTestFiles(files);
   }
 
   const submitPolygon = async () => {
-    if (!apiKey || !secret) {
-      alert("Please add your api key or secret");
-      setTab("Users");
-      return;
-    }
-    if (error1 || error2) {
-      alert("You have errors in your Constraints tab");
-      return;
-    }
-    if (testFiles.length === 0) {
-      alert("You forgot to generate tests");
-      return;
-    }
+    // if (!apiKey || !secret) {
+    //   alert("Please add your api key or secret");
+    //   setTab("Users");
+    //   return;
+    // }
+    // if (error1 || error2) {
+    //   alert("You have errors in your Constraints tab");
+    //   setTab("Constraints");
+    //   return;
+    // }
+    // if (testFiles.length === 0) {
+    //   alert("You forgot to generate tests");
+    //   setTab("Tests")
+    //   return;
+    // }
     setPolygonLoading(true);
-    const res = await axiosBackInstance.post("/polygonAddProblemApi", {
-      title: title,
-      statement: statement,
-      input: input,
-      output: output,
-      testInput: testInput,
-      testOutput: testOutput,
-      notes: notes,
-      tests: testFiles,
-      user: user,
-      sol: sol,
-      timeLimit: timeLimit,
-      memoryLimit: memoryLimit,
-      problemLanguage: language,
-      userLang: userLang,
-      apiKey: apiKey,
-      apiSecret: secret,
-    });
-    const response = res.data;
-    if (response.message === "Problem created successfully!") {
-      alert("success, added to polygon!");
-    } else {
-      alert("error in sending to polygon");
-    }
-    setPolygonLoading(false);
+    setIsProcessComplete(false);
+
+
+    await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
+    // const res = await axiosBackInstance.post("/polygonAddProblemApi", {
+    //   title: title,
+    //   statement: statement,
+    //   input: input,
+    //   output: output,
+    //   testInput: testInput,
+    //   testOutput: testOutput,
+    //   notes: notes,
+    //   tests: testFiles,
+    //   user: user,
+    //   sol: sol,
+    //   timeLimit: timeLimit,
+    //   memoryLimit: memoryLimit,
+    //   problemLanguage: language,
+    //   userLang: userLang,
+    //   apiKey: apiKey,
+    //   apiSecret: secret,
+    // });
+    // const response = res.data;
+    // if (response.message === "Problem created successfully!") {
+    //   alert("success, added to polygon!");
+    // } else {
+    //   alert("error in sending to polygon");
+    // }
+    setIsProcessComplete(true);
   }
 
   const generateSolution = async () => {
@@ -198,10 +210,15 @@ export default function Home() {
       setTimeout(() => setCopiedOutput(false), 2000); // Reset the copied state after 2 seconds
     });
   };
+
   return (
     <>
       <div id="enterIdea" className=" min-h-screen flex flex-col z-10 bg-gray-100">
-        <Link href="/" className="flex items-center w-full  mx-8 my-6">
+        <div className="h-full w-full"><LoadingModal isLoading={polygonLoading} isProcessComplete={isProcessComplete} onClose={() => {
+          setPolygonLoading(false);
+          setIsProcessComplete(false);
+        }} /></div>
+        <Link href="/" className="flex items-center w-full px-8 my-6">
           <div className="h-[60px] w-[80px] relative">
             <Image src={logo} alt="logo" className="z-20" fill />
           </div>
@@ -249,21 +266,21 @@ export default function Home() {
                 <div className="text-center text-sm font-sans font-normal">memory limit per test: {memoryLimit} megabytes</div>
                 <div className="text-center text-sm font-sans font-normal">input: standard input</div>
                 <div className="text-center text-sm font-sans font-normal">output: standard output</div>
-                <div className="text-md font-mono mt-6"><ProblemText text={statement} /></div>
+                <div className="text-sm font-mono mt-6"><ProblemText text={statement} /></div>
 
                 {input && (
-                  <><div className="font-semibold text-md mt-6">Input</div>
-                    <div className="text-md font-mono mt-3"><ProblemText text={input} /></div></>
+                  <><div className="font-semibold text-sm mt-6">Input</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={input} /></div></>
                 )}
                 {output &&
-                  <><div className="font-semibold text-md mt-6">Output</div>
-                    <div className="text-md font-mono mt-3"><ProblemText text={output} /></div></>
+                  <><div className="font-semibold text-sm mt-6">Output</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={output} /></div></>
                 }
-                {testInput && testOutput && (
+                {(testInput || testOutput) && (
                   <>
-                    <div className="font-semibold text-md mt-6">Sample</div>
+                    <div className="font-semibold text-sm mt-6">Sample</div>
                     <div className="w-full border-[1px] border-black flex flex-col mt-1">
-                      <div className="flex justify-between items-center w-full border-b-[1px] border-black px-[6px] font-semibold text-md py-1">
+                      <div className="flex justify-between items-center w-full border-b-[1px] border-black px-[6px] font-semibold text-sm py-1">
                         input
                         <button
                           onClick={copyInput}
@@ -272,11 +289,11 @@ export default function Home() {
                           {copiedInput ? 'Copied!' : 'Copy'}
                         </button>
                       </div>
-                      <div className="font-mono w-full border-b-[1px] border-black px-[6px] bg-gray-100 text-md text-amber-950 whitespace-pre-wrap">
+                      <div className="font-mono w-full border-b-[1px] min-h-[30px] border-black px-[6px] bg-gray-100 text-sm text-amber-950 whitespace-pre-wrap">
                         {testInput}
 
                       </div>
-                      <div className="flex justify-between items-center  w-full border-b-[1px] border-black px-[6px] font-semibold text-md py-1">
+                      <div className="flex justify-between items-center  w-full border-b-[1px] border-black px-[6px] font-semibold text-sm py-1">
                         output
                         <button
                           onClick={copyOutput}
@@ -285,14 +302,14 @@ export default function Home() {
                           {copiedOutput ? 'Copied!' : 'Copy'}
                         </button>
                       </div>
-                      <div className="font-mono w-full border-b-[1px] border-black px-[6px] bg-gray-100 text-md text-amber-950 whitespace-pre-wrap">{testOutput}</div>
+                      <div className="font-mono w-full border-b-[1px] min-h-[30px] border-black px-[6px] bg-gray-100 text-sm text-amber-950 whitespace-pre-wrap">{testOutput}</div>
                     </div>
                   </>
                 )}
 
                 {notes &&
-                  <><div className="font-semibold text-md mt-6">Notes</div>
-                    <div className="text-md font-mono mt-3"><ProblemText text={notes} /></div></>
+                  <><div className="font-semibold text-sm mt-6">Notes</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={notes} /></div></>
                 }
               </div>
             </div>

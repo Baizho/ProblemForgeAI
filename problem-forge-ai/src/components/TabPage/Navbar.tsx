@@ -43,10 +43,10 @@ const Navbar: React.FC<Props> = ({ userLang, setUserLang, userTheme, setUserThem
     };
 
     return (
-        <div className="bg-gray-800 text-white p-4 w-full flex flex-col items-center 2xl:flex-row 2xl:justify-between">
+        <div className="bg-gray-800 text-white p-4 w-full flex flex-col items-center xl:flex-row 2xl:justify-between">
             <div className="flex flex-col 2xl:flex-row items-center 2xl:space-x-4">
                 <Select
-                    className="w-full mb-4 md:mb-0 md:w-48"
+                    className="w-full mb-4 md:mb-0 md:w-28"
                     options={languages}
                     value={languages.find(option => option.value === userLang)}
                     onChange={handleLangChange}
@@ -70,7 +70,7 @@ const Navbar: React.FC<Props> = ({ userLang, setUserLang, userTheme, setUserThem
                     }}
                 />
                 <Select
-                    className="w-full mb-4 md:mb-0 md:w-48"
+                    className="w-full mb-4 md:mb-0 md:w-28 text-sm"
                     options={themes}
                     value={themes.find(option => option.value === userTheme)}
                     onChange={handleThemeChange}
@@ -97,7 +97,7 @@ const Navbar: React.FC<Props> = ({ userLang, setUserLang, userTheme, setUserThem
                     <label className="mr-2">Font Size</label>
                     <input
                         type="range"
-                        min="18"
+                        min="10"
                         max="30"
                         value={fontSize}
                         step="2"
@@ -107,7 +107,7 @@ const Navbar: React.FC<Props> = ({ userLang, setUserLang, userTheme, setUserThem
                 </div>
 
                 <button
-                    className="bg-gray-300 text-black px-8 py-2 my-2  border border-gray-600 text-md rounded hover:bg-gray-700"
+                    className="bg-gray-300 text-black px-4 py-2 my-2  border border-gray-600 text-sm rounded hover:bg-gray-700"
                     onClick={generateSolution}
                 >
                     Generate Solution

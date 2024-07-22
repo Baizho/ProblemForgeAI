@@ -4,6 +4,7 @@ import * as pfs from 'fs/promises';
 import * as path from 'path';
 import * as AWS from 'aws-sdk';
 import GeminiService from '../gemini/gemini-service';
+import { v4 as uuid4 } from "uuid";
 
 const geminiService = new GeminiService;
 
@@ -16,7 +17,6 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 const bucketName = process.env.S3_BUCKET_NAME;
-const scriptPath = path.join(process.cwd(), '/src/api/generate_test.py');
 const outputDirectory = path.join(process.cwd());
 
 async function uploadFile(fileName: string): Promise<string> {
@@ -108,7 +108,8 @@ async function getFileFromS3(key: string): Promise<string> {
 async function activate_test(number: string, input: string, output: string, testInput: string, testOutput: string) {
     // The new code to be written into generate_test.py
     const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
-
+    const file_name = `script-${uuid4()}`;
+    const scriptPath = path.join(process.cwd(), `/src/api/${file_name}.py`);
     // Function to replace file content
     async function replaceFileContent() {
         fs.writeFile(scriptPath, generate_code, (err) => {
