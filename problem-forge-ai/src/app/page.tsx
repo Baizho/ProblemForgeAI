@@ -129,50 +129,50 @@ export default function Home() {
   }
 
   const submitPolygon = async () => {
-    // if (!apiKey || !secret) {
-    //   alert("Please add your api key or secret");
-    //   setTab("Users");
-    //   return;
-    // }
-    // if (error1 || error2) {
-    //   alert("You have errors in your Constraints tab");
-    //   setTab("Constraints");
-    //   return;
-    // }
-    // if (testFiles.length === 0) {
-    //   alert("You forgot to generate tests");
-    //   setTab("Tests")
-    //   return;
-    // }
+    if (!apiKey || !secret) {
+      alert("Please add your api key or secret");
+      setTab("Users");
+      return;
+    }
+    if (error1 || error2) {
+      alert("You have errors in your Constraints tab");
+      setTab("Constraints");
+      return;
+    }
+    if (testFiles.length === 0) {
+      alert("You forgot to generate tests");
+      setTab("Tests")
+      return;
+    }
     setPolygonLoading(true);
     setIsProcessComplete(false);
 
 
-    await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
-    // const res = await axiosBackInstance.post("/polygonAddProblemApi", {
-    //   title: title,
-    //   statement: statement,
-    //   input: input,
-    //   output: output,
-    //   testInput: testInput,
-    //   testOutput: testOutput,
-    //   notes: notes,
-    //   tests: testFiles,
-    //   user: user,
-    //   sol: sol,
-    //   timeLimit: timeLimit,
-    //   memoryLimit: memoryLimit,
-    //   problemLanguage: language,
-    //   userLang: userLang,
-    //   apiKey: apiKey,
-    //   apiSecret: secret,
-    // });
-    // const response = res.data;
-    // if (response.message === "Problem created successfully!") {
-    //   alert("success, added to polygon!");
-    // } else {
-    //   alert("error in sending to polygon");
-    // }
+    // await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
+    const res = await axiosBackInstance.post("/polygonAddProblemApi", {
+      title: title,
+      statement: statement,
+      input: input,
+      output: output,
+      testInput: testInput,
+      testOutput: testOutput,
+      notes: notes,
+      tests: testFiles,
+      user: user,
+      sol: sol,
+      timeLimit: timeLimit,
+      memoryLimit: memoryLimit,
+      problemLanguage: language,
+      userLang: userLang,
+      apiKey: apiKey,
+      apiSecret: secret,
+    });
+    const response = res.data;
+    if (response.message === "Problem created successfully!") {
+      alert("success, added to polygon!");
+    } else {
+      alert("error in sending to polygon");
+    }
     setIsProcessComplete(true);
   }
 
