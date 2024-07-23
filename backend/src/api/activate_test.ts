@@ -108,7 +108,6 @@ async function getFileFromS3(key: string): Promise<string> {
 async function activate_test(number: string, input: string, output: string, testInput: string, testOutput: string) {
     // The new code to be written into generate_test.py
     const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
-    return generate_code;
     const file_name = `script-${uuid4()}`;
     const scriptPath = path.join(process.cwd(), `/src/api/${file_name}.py`);
     // Function to replace file content

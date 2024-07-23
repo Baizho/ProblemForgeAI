@@ -171,26 +171,28 @@ class GeminiService {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:
             1. Use sys.argv[1] for the total number of test cases.
-            2. Store the test cases as strings in a 'test_cases' string array.
-        
+            2. Use uuid.uuid4() for unique file identifiers.
+            3. Save test cases in separate .txt files.
+            4. Store file names in a 'file_names' array.
+
             Problem constraints:
             Input: ${input},
             Output: ${output}
-        
-            Here is an example test, try to make the format the same as this test:
+
+            Here is an example test, try to make the format the same as this test, :
             ${testInput}
-        
+
             Requirements:
             - Generate random values within specified ranges.
             - Include edge cases (5-10% of total, min 1, max 10).
             - Handle various input types (integers, floats, strings, arrays).
-        
+
             The script should:
             1. Define functions for random and edge cases.
             2. Calculate edge and random case counts.
-            3. Generate all test cases as strings.
-            4. Return 'test_cases' array containing all generated test case strings.
-        
+            3. Generate and save all test cases.
+            4. Return 'file_names' array with created .txt file names.
+
             Provide only the Python code, without explanations.
         `);
 
