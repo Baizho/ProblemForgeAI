@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,6 +58,7 @@ export default function RootLayout({
       </Head>
       <body className={`${inter.className} ${libre.className} ${rubi.className} ${syne.className} ${raleway.className} `}>
         {children}
+        <Analytics />
 
       </body>
     </html>
