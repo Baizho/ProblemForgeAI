@@ -6,8 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:e2e": "jest --testPathPattern=src/e2e",
-    "prebuild": "node install-python-dependencies.js",
-    "build": "next build",
+    "build": "tsc --build",
     "start": "node ./dist/index.js",
     "start:dev": "nodemon ./src/index.ts"
   },
