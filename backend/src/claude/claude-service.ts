@@ -40,7 +40,7 @@ Generate a competitive programming problem using the following guidelines:
 3. Do not create IOI-style or interactive problems.
 4. For LaTeX formatting:
    - Use $...$ to wrap LaTeX commands
-   - Use \\le for less than or equal to (e.g. $1 \\le n \\le 100$)
+   - Use \\\\le for less than or equal to (e.g. $1 \\\\le n \\\\le 100$)
 5. Please provide your response in strict JSON format only, with no other text. Ensure all double quotes are properly escaped and the JSON is valid:
 {
     "title": "Problem Title",
