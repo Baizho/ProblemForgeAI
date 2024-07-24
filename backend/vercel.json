@@ -1,16 +1,28 @@
 {
     "version": 2,
     "builds": [
-     {
-      "src": "src/index.ts",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
-     }
+      {
+        "src": "src/index.ts",
+        "use": "@vercel/node",
+        "config": { "includeFiles": ["dist/**"] }
+      }
     ],
     "routes": [
-     {
-      "src": "/(.*)",
-      "dest": "/src/index.ts"
-     }
-    ]
-   }
+      {
+        "src": "/(.*)",
+        "dest": "/src/index.ts"
+      }
+    ],
+    "build": {
+      "env": {
+        "PYTHON_VERSION": "3.9"
+      },
+      "steps": [
+        {
+          "name": "Install Python Dependencies",
+          "run": "pip install sys random uuid"
+        }
+      ]
+    }
+  }
+  

@@ -1,2 +1,0 @@
-# No additional requirements
-# This project only uses built-in Python modules
