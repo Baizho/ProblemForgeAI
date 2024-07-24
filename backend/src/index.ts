@@ -61,7 +61,7 @@ app.post("/generateTests", async (req: Request, res: Response) => {
 
     const options: Options = {
       mode: 'text',
-      pythonPath: '/usr/bin/python3', // Specify the correct path to Python
+      // pythonPath: '/usr/bin/python3', // Specify the correct path to Python
       args: [number.toString()]
     };
 
