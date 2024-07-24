@@ -19,12 +19,11 @@ const TagsDropdown = ({ selectedTags, setSelectedTags, isTagsDropdownOpen, setIs
 
     const allTags = [
         'Array', 'String', 'Hash Table', 'Dynamic Programming', 'Math',
-        'Sorting', 'Greedy', 'Depth-First Search', 'Database', 'Binary Search',
+        'Sorting', 'Greedy', 'Depth-First Search', 'Binary Search',
         'Tree', 'Breadth-First Search', 'Matrix', 'Graph', 'Linked List',
         'Stack', 'Queue', 'Heap', 'Recursion', 'Backtracking', 'Bit Manipulation',
         'Trie', 'Segment Tree', 'Binary Indexed Tree', 'Sliding Window', 'Two Pointers',
-        'Union Find', 'Topological Sort', 'Greedy Algorithm', 'Graph Theory', 'Algebra',
-        'Calculus', 'Statistics', 'Probability', 'Optimization', 'Game Theory', 'Cryptography'
+        'Union Find', 'Topological Sort', 'Greedy Algorithm', 'Graph Theory', 'Algebra', 'Probability', 'Optimization', 'Game Theory',
     ];
 
     const toggleDropdown = () => {
