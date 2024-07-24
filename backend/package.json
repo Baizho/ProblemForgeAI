@@ -9,7 +9,7 @@
     "build": "tsc --build",
     "start": "node ./dist/index.js",
     "start:dev": "nodemon ./src/index.ts",
-    "vercel-build": "pip install -r requirements.txt"
+    "vercel-build": "python3 -m pip install -r requirements.txt"
   },
   "keywords": [],
   "author": "",
