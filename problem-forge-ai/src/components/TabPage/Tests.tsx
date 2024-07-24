@@ -38,6 +38,11 @@ const Tests = ({ testFiles, setTestFiles, handleTests, countTests, setCountTests
         setTestText('');
     };
 
+    const deleteTest = (id: number) => {
+        const result = testFiles.filter((file, index) => index !== id);
+        setTestFiles(result);
+    }
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const tests: string[] = [];
         const files = Array.from(e.target.files || []);
@@ -141,7 +146,7 @@ const Tests = ({ testFiles, setTestFiles, handleTests, countTests, setCountTests
                 {testFiles.map((file, index) => {
                     // console.log(file.key);
                     return (
-                        <TestText key={index} content={file.length > 500 ? file.substring(0, 50) + '...' : file} name={`test_${formatNumber(index + 1, countTests.toString().length)}`} />
+                        <TestText id={index} deleteTest={deleteTest} key={index} content={file.length > 500 ? file.substring(0, 50) + '...' : file} name={`test_${formatNumber(index + 1, countTests.toString().length)}`} />
                     )
                 })}
             </div>

@@ -1,12 +1,18 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from 'cors';
-import connectDB from "./db";
+
 import geminiRouter from "./gemini/gemini-router";
 import GeminiService from "./gemini/gemini-service";
+
+import claudeRouter from "./claude/cluade-router";
+import ClaudeService from "./claude/claude-service";
+
 import { activate_test } from "./api/activate_test";
+
 import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
 import polygonAddProblemApi from "./polygon/polygon_api";
+
 import axios from "axios";
 import qs from 'qs';
 import bodyParser from "body-parser";
@@ -43,7 +49,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // connectDB(); // Uncomment when you need to connect to the database
 
 // Routes
-app.use(geminiRouter);
+// app.use(geminiRouter);
+app.use(claudeRouter);
 
 // Generate Tests API
 app.post("/generateTests", async (req: Request, res: Response) => {

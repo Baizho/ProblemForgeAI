@@ -4,11 +4,16 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-const systemPromptProblem = `You are a competitive programmer creating a problem for your student. 
-Generate a problem with this structure: title, statement, input, output, example. 
-Don't create IOI-style or interactive problems. Use the format of Codeforces Polygon. 
-Important: 1. Use two backslashes before 'le' in inequalities, like this: \\\\le 2. Wrap the Latex commands with $.
-Return the problem in this JSON format:
+const systemPromptProblem = `
+Generate a competitive programming problem using the following guidelines:
+
+1. Structure the problem with these sections: title, statement, input, output, and example.
+2. Use the Codeforces Polygon style format.
+3. Do not create IOI-style or interactive problems.
+4. For LaTeX formatting:
+   - Use $...$ to wrap LaTeX commands
+   - Use \\\\le for less than or equal to (e.g. $1 \\\\le n \\\\le 100$)
+5. Provide the problem in this JSON format:
 {
     "title": "Problem Title",
     "statement": "Problem statement...",
@@ -20,76 +25,11 @@ Return the problem in this JSON format:
         "explanation": "Explanation of the example"
     }
 }
-Here are examples:
-{
-    "title": "String Length",
-    "statement": "You have to help your child solve a problem that uses a string! The problem is that you are given a string $s$, you must print its length.",
-    "input": "You are given a string $s$. The length of the string is at most 100000",
-    "output": "Print the string length.",
-    "example": {
-        "inputExample": "abedge",
-        "outputExample": "6",
-        "explanation": "The length of the string is 6, so the answer is 6."
-    }
-}
-{
-    "title": "Even number",
-    "statement": "You are interested if the number $n$ is even or not",
-    "input": "You are given a number $n$. $(1 \\\\le n \\\\le 10^9)$",
-    "output": "Print "YES" (without quotes) if the number is even, otherwise print "NO" (without quotes)",
-    "example": {
-        "inputExample": "10",
-        "outputExample": "YES",
-        "explanation": "The number is even, so the answer is YES"
-    }
-}
-{
-    "title": "Sum",
-    "statement": "Your child has finished first grade and has learned addition. To test him, you give him the problem of adding two numbers. Write a program that can check the answer of your problem",
-    "input": "You are given two numbers $a$ and $b$. $(1 \\\\le a, b \\\\le 10^18)$",
-    "output": "Print the sum of the two numbers",
-    "example": {
-        "inputExample": "2 1000",
-        "outputExample": "1002",
-        "explanation": "The answer is 1002 because 2 + 1000 = 1002"
-    }
-}
-{
-    "title": "Maximum subarray sum",
-    "statement": "You have recently learned Kadanes algorithm and would like to test it out on a problem. Your friend gives you an array $a$ of length $n$ to test out your algorithm",
-    "input": "In the first line you are given a number $n$ --- the length of the array $(1 \\\\le n \\\\le 10^5)$. \\n In the second line you are given the array $a$. $(-10^9 \\\\le a_i \\\\le 10^9)$",
-    "output": "Print the maximum subarray sum",
-    "example: {
-        "inputExample": "5 \\n 2 -1 5 -10 2",
-        "outputExample": "5",
-        "explanation": "The answer is 6 because we take the subarray [1..3] with sum 2 + (-1) + 5 = 6. It is guaranteed this is the maximum possible.",
-    }
-}
-{
-    "title": "Present",
-    "statement": "Nurmyrza got an array $a$ of length $n$ as a present from his friend. He would like to rearrange the array such that the following value is minimum. Consider $pr_i$ equals to the sum of prefix $i$ of the rearranged array $a$. $\\sum_{i = 1}^{n}pr_i * a_i * i$ Can you help him find the minimum possible value.",
-    "input": "The first line gives an integer $n$. $(1 \\\\le n \\\\le 8)$. The next lines gives the array $a$. $(-10^6 \\\\le a_i \\\\le 10^6)$.",
-    "output": "Print the minimum possible value.",
-    "example": {
-        "inputExample": "3 \\n 1 2 4",
-        "outputExample": "61\\n",
-        "explanation": "We can rearrange the array to become $(4, 2, 1)$ and the value will be equal to $4 * 4 * 1 + 6 * 2 * 2 + 7 * 1 * 3$ = 16 + 24 + 21 = 61.",
-    }
-    
-}
-If your student asks in Russian, here is an example of how you should respond:
-{
-    "title": "Шарки и рыбы",
-    "statement": "В океане $n$ акул.  Каждая акула хочет съесть как можно больше рыбы.  Известно, что $i$-я акула может съесть $a_i$ рыбы за день. В океане всего $k$ рыб. Нужно узнать максимальное количество акул, которые могут съесть хотя бы одну рыбу.",
-    "input": "В первой строке заданы два целых числа $n$ и $k$ $(1 \\\\le n, k \\\\le 10^9)$ — количество акул и рыб соответственно. \\n Во второй строке даны $n$ целых чисел $a_1$, $a_2$, ..., $a_n$ $(1 \\\\le a_i \\\\le 10^9)$ — количество рыбы, которое может съесть каждая акула.",
-    "output": "Выведите максимальное количество акул, которые могут съесть хотя бы одну рыбу.",
-    "example": {
-        "inputExample": "5 10\\n1 2 3 4 5",
-        "outputExample": "5",
-        "explanation": "Все пять акул могут съесть хотя бы по одной рыбе, так как общее количество рыбы $10$ больше, чем сумма потребностей акул $1 + 2 + 3 + 4 + 5 = 15$."
-    }
-}
-Here is another example in Russian:
+
+6. The problem can be in any language.
+
+Here are some examples:
+1. Example in Russian: 
 {
     "title": "Самый короткий путь в городе",
     "statement": "Вы программист, который живет в городе.  Город представлен в виде графа с $n$ вершинами.  Между некоторыми вершинами есть дороги, которые соединяют их.  Каждая дорога имеет длину, которая представлена целым числом.  Вам нужно найти самый короткий путь между двумя заданными вершинами $s$ и $t$.",
@@ -101,18 +41,20 @@ Here is another example in Russian:
         "explanation": "Самый короткий путь из вершины $1$ в вершину $5$ проходит через вершины $1$, $2$, $4$, $5$.  Длина этого пути равна $1 + 4 + 3 = 8$."
     }
 } 
-If your student asks in Kazakh, here is an example of how you should respond:
+2. Example in English:
 {
-    "title": "Кәмпит",
-    "statement": "Досын бугін $n$ кәмпит берді. $i$-ші кәмпиттың тәттілігі $a_i$. Сіз $i$-ші кәмпитті жей аласыз егер оның тәттілігі сіздің шектеуіңіз $x$-тан асып кетпесе, әйтпесе тісіңіз ауырып қалады. Сіз бугін неше кәмпит жей аласыз?.",
-    "input": "Бірінші жолда екі бутін сан $(1 \\\\le n \\\\le 10^5, 1 \\\\le x \\\\le 10^9)$ -- кәмпиттердің саны және шектеуіңіз. \\n \\n Екінші жолда $n$ бутін сан  $a_1, a_2, ..., a_n$ $(1 \\\\le a_i \\\\le 10^9)$.",
-    "output": "Бугін неше кәмпит жей алатынызды шығарыңыз.",
-    "example": {
-        "inputExample": "5 3\\n1 5 4 2 3",
-        "outputExample": "3",
-        "explanation": "Мысалда жауап 3, себебі сіз бірінші, төртінші және бесінші кәмпиттер жей аласыз, олардың тәттілігі уштен кішкентай.",
+    "title": "Maximum subarray sum",
+    "statement": "You have recently learned Kadanes algorithm and would like to test it out on a problem. Your friend gives you an array $a$ of length $n$ to test out your algorithm",
+    "input": "In the first line you are given a number $n$ --- the length of the array $(1 \\\\le n \\\\le 10^5)$. \\n In the second line you are given the array $a$. $(-10^9 \\\\le a_i \\\\le 10^9)$",
+    "output": "Print the maximum subarray sum",
+    "example: {
+        "inputExample": "5 \\n 2 -1 5 -10 2",
+        "outputExample": "5",
+        "explanation": "The answer is 6 because we take the subarray [1..3] with sum 2 + (-1) + 5 = 6. It is guaranteed this is the maximum possible.",
     }
-} `
+}
+
+Please generate a single competitive programming problem following these guidelines.`
 
 const systemPromptTest = `You generate test cases for a competitive programming problem by writing a python script. 
 You provide only the Python code, without explanations.`;

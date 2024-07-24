@@ -111,7 +111,7 @@ async function activate_test(number: string, input: string, output: string, test
     // console.log(generate_code);
 
     const res = await PythonShell.runString(generate_code, { args: [number.toString()] });
-    console.log(res[0]);
+    // console.log(res[0]);
     // return [generate_code];
     const tests = JSON.parse(res[0].replace(/'/g, '"'))
     // console.log(tests);

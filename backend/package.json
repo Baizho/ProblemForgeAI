@@ -14,11 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "@google/generative-ai": "^0.13.0",
     "aws-sdk": "^2.1652.0",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "dirty-json": "^0.9.2",
     "dotenv": "^16.4.5",
     "encodeurl": "^2.0.0",
     "express": "^4.19.2",
