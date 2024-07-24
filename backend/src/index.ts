@@ -24,6 +24,7 @@ const geminiService = new GeminiService();
 
 const allowedOrigins = [
   'https://olympath-ai.vercel.app',
+  'https://olympath-ai.vercel.app/#problem',
   'http://localhost:3000'
 ];
 
