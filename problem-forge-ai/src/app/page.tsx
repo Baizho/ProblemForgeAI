@@ -13,8 +13,7 @@ import Tests from "@/components/TabPage/Tests";
 import Users from "@/components/TabPage/Users";
 import Solution from "@/components/TabPage/Solution";
 import Constraints from "@/components/TabPage/Constraints";
-import GridPattern from "@/components/magicui/animated-grid-pattern";
-import { AnimatedGridPatternDemo } from "@/components/GridBg";
+import spinner from '@/../public/loadingCode.svg';
 
 
 import Image from "next/image";
@@ -53,6 +52,7 @@ export default function Home() {
 
   const [user, setUser] = useState("");
 
+  const [statementLoading, setStatementLoading] = useState(false);
   const [sol, setSol] = useState("");
   const [title, setTitle] = useState("");
   const [statement, setStatement] = useState("");
@@ -93,30 +93,29 @@ export default function Home() {
       alert("Please select a difficulty");
       return;
     }
-    setTitle("Loading...");
-    setStatement("Loading...");
-    setInput("Loading...");
-    setOutput("Loading...");
-    setTestInput("Loading...");
-    setTestOutput("Loading...");
-    setNotes("Loading...");
-    setTestFiles([]);
     router.push("#problem");
-    const res = await axiosBackInstance.post("/generateProblem", {
-      ideaPrompt: idea,
-      problemTopic: selectedTags.join(","),
-      problemLevel: selectedDifficulty?.label,
-      problemLanguage: language
-    });
-    const problem = res.data.message;
-    // console.log(problem);
-    setTitle(problem.title);
-    setStatement(problem.statement);
-    setInput(problem.input);
-    setOutput(problem.output);
-    setTestInput(problem.example.inputExample);
-    setTestOutput(problem.example.outputExample);
-    setNotes(problem.example.explanation);
+    setStatementLoading(true);
+    try {
+      const res = await axiosBackInstance.post("/generateProblem", {
+        ideaPrompt: idea,
+        problemTopic: selectedTags.join(","),
+        problemLevel: selectedDifficulty?.label,
+        problemLanguage: language
+      });
+      const problem = res.data.message;
+      // console.log(problem);
+      setTitle(problem.title);
+      setStatement(problem.statement);
+      setInput(problem.input);
+      setOutput(problem.output);
+      setTestInput(problem.example.inputExample);
+      setTestOutput(problem.example.outputExample);
+      setNotes(problem.example.explanation);
+      setTestFiles([]);
+    } catch (err: any) {
+      alert("Sorry, there was an error generating the problem, please explain in more detail or create something easier.");
+    }
+    setStatementLoading(false);
   }
 
 
@@ -278,7 +277,14 @@ export default function Home() {
 
             <div className=" bg-gray-100 p-6 flex flex-col h-full">
               <div className="font-semibold text-sm h-[20px]">Preview</div>
-              <div className="flex flex-col h-[100%] border-[1px] border-gray-300 bg-white px-6 py-2  overflow-y-auto">
+              <div className="flex flex-col h-[100%] border-[1px] border-gray-300 bg-white px-6 py-2  overflow-y-auto  relative">
+                {statementLoading && (
+                  <div className='w-full h-full flex items-center -my-2 -mx-6 justify-center absolute bg-gray-100  bg-opacity-75 z-30'>
+                    <div className="w-[25%] h-[25%] z-20 absolute">
+                      <Image src={spinner} alt="Generating..." fill className="animate-spin" />
+                    </div>
+                  </div>
+                )}
                 <div className="text-center text-[125%] font-mono">{title}</div>
                 <div className="text-center text-sm font-sans font-normal">time limit per test: {timeLimit / 1000} second</div>
                 <div className="text-center text-sm font-sans font-normal">memory limit per test: {memoryLimit} megabytes</div>
