@@ -8,10 +8,10 @@ import GeminiService from "./gemini/gemini-service";
 import claudeRouter from "./claude/cluade-router";
 import ClaudeService from "./claude/claude-service";
 
-import { activate_test } from "./api/activate_test";
-
 import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
 import polygonAddProblemApi from "./polygon/polygon_api";
+
+import { PythonShell } from 'python-shell';
 
 import axios from "axios";
 import qs from 'qs';
@@ -57,9 +57,15 @@ app.use(claudeRouter);
 app.post("/generateTests", async (req: Request, res: Response) => {
   const { number, input, output, testInput, testOutput } = req.body;
   try {
-    const file_links = await activate_test(number.toString(), input, output, testInput, testOutput);
-    console.log("Tests generated successfully!");
-    res.status(201).json({ file_links });
+    const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
+    // console.log(generate_code);
+
+    const response = await PythonShell.runString(generate_code, { args: [number.toString()] });
+    // console.log(res[0]);
+    // return [generate_code];
+    const tests = JSON.parse(response[0].replace(/'/g, '"'));
+    // console.log(tests);
+    res.status(201).json({ tests });
   } catch (err: any) {
     console.error("Error generating tests", err);
     res.status(500).json({ message: "Error generating tests", err });

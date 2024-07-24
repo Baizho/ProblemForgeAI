@@ -135,7 +135,7 @@ export default function Home() {
         testInput: testInput,
         testOutput: testOutput
       });
-      const files = res.data.file_links;
+      const files = res.data.tests;
       setTestFiles([...testFiles, ...files]);
     } catch (err: any) {
       alert("There was an error generating tests");
