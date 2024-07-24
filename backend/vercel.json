@@ -13,16 +13,8 @@
         "dest": "/src/index.ts"
       }
     ],
-    "build": {
-      "env": {
+    "env": {
         "PYTHON_VERSION": "3.9"
-      },
-      "steps": [
-        {
-          "name": "Install Python Dependencies",
-          "run": "pip install sys random uuid"
-        }
-      ]
-    }
+      }
   }
   
