@@ -16,12 +16,23 @@ const geminiService = new GeminiService();
 
 // Middleware setup
 
+const allowedOrigins = [
+  'https://olympath-ai.vercel.app',
+  'http://localhost:3000'
+];
+
 const corsOptions = {
-  origin: 'https://olympath-ai.vercel.app',
+  origin: (origin, callback) => {
+    // Check if the origin is in the allowedOrigins array or if it's not provided (for non-browser requests)
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200
-}
-
+};
 
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));

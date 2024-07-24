@@ -146,12 +146,14 @@ class GeminiService {
 
     // 5. In the Input, Output sections, try to explain in detail of the format you will print characters or words or numbers.
     async generateProblem(ideaPrompt: string, problemTopic: string, problemLevel: string, problemLanguage: string): Promise<string> {
+
+        // console.log(typeof problemTopic, typeof problemLevel);
         try {
             // console.log("you are generatig content!");
             const res = await genModelProblem.generateContent(ideaPrompt + `
             Here are additional rules you must follow:
             1. Return your answer in the language: ${problemLanguage}.
-            2. The problem will use the competitive programming topic: ${problemTopic}.
+            2. The problem will use the following competitive programming topics: ${problemTopic}.
             3. Make sure the problem is around the same complexity as your students wants, he wants a problem with complexity around: ${problemLevel}.
             4. Remember to use two backslashes otherwise it will not work!
              `);
@@ -162,7 +164,7 @@ class GeminiService {
             // return `{yolo: "hey"}`;
         } catch (err: any) {
             console.log("error generating content from gemini", err);
-            return "error bruh";
+            return `{"message": "error bruh"}`;
         }
     }
 
@@ -171,28 +173,26 @@ class GeminiService {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:
             1. Use sys.argv[1] for the total number of test cases.
-            2. Use uuid.uuid4() for unique file identifiers.
-            3. Save test cases in separate .txt files.
-            4. Store file names in a 'file_names' array.
-
+            2. Store the test cases as strings in a 'test_cases' string array.
+        
             Problem constraints:
             Input: ${input},
             Output: ${output}
-
-            Here is an example test, try to make the format the same as this test, :
+        
+            Here is an example test, try to make the format the same as this test:
             ${testInput}
-
+        
             Requirements:
             - Generate random values within specified ranges.
             - Include edge cases (5-10% of total, min 1, max 10).
             - Handle various input types (integers, floats, strings, arrays).
-
+        
             The script should:
             1. Define functions for random and edge cases.
             2. Calculate edge and random case counts.
-            3. Generate and save all test cases.
-            4. Return 'file_names' array with created .txt file names.
-
+            3. Generate all test cases as strings.
+            4. Return 'test_cases' array containing all generated test case strings.
+        
             Provide only the Python code, without explanations.
         `);
 

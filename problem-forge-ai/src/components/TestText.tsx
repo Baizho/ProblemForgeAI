@@ -13,6 +13,7 @@ const TestText = (props: Props) => {
     const [showTest, setShowTest] = useState(false);
 
     const toggleShowTest = () => {
+        console.log(content);
         setShowTest(!showTest);
     };
     // console.log(file.toString());

@@ -14,6 +14,7 @@ class GeminiController {
         const { ideaPrompt, problemTopic, problemLevel, problemLanguage } = req.body;
         try {
             // console.log("we are genearting?", this.geminiService);
+            // console.log(typeof problemTopic, typeof problemLevel);
             const result = await this.geminiService.generateProblem(ideaPrompt, problemTopic, problemLevel, problemLanguage);
             res.status(201).json({ message: JSON.parse(result) });
         } catch (err: any) {

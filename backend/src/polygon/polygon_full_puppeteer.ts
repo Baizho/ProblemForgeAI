@@ -1,7 +1,6 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import { v4 as uuid4 } from "uuid";
 import GeminiService from "../gemini/gemini-service";
-import { getFileFromS3 } from "../api/activate_test";
 import * as path from 'path';
 import fs from "fs/promises";
 import fs1 from "fs";
@@ -205,7 +204,7 @@ async function addTests(browser: Browser, testInput: string, tests: string[], pr
 
             const file_links: string[] = [];
             await Promise.all(tests.map(async (link, index) => {
-                const fileContent = await getFileFromS3(link);
+                const fileContent = link;
                 // console.log("the link", link);
                 const filePath = `${outputDirectory}/link_test${index}.txt`;
                 await fs.writeFile(filePath, fileContent)

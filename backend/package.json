@@ -33,6 +33,7 @@
     "openai": "^4.52.0",
     "passport": "^0.7.0",
     "puppeteer": "^22.12.1",
+    "python-shell": "^5.0.0",
     "qr": "^0.2.4",
     "react-select": "^5.8.0",
     "session": "^0.1.0",

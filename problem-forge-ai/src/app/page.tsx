@@ -22,13 +22,17 @@ import logo from "@/../public/logoOlympath.png";
 import Link from "next/link";
 import LoadingModal from "@/components/LoadingModal";
 
+interface Difficulty {
+  label: string;
+  color: string;
+}
 
 export default function Home() {
   const router = useRouter();
   const [idea, setIdea] = useState("");
   const [language, setLanguage] = useState("english");
-  const [problemTopic, setProblemTopic] = useState("");
-  const [problemLevel, setPRoblemLevel] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
   // State variable to set editors default language
   const [userLang, setUserLang] = useState("cpp");
@@ -77,6 +81,18 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!idea) {
+      alert("Please write a idea for a problem");
+      return;
+    }
+    if (selectedTags.length === 0) {
+      alert("Please select a topic");
+      return;
+    }
+    if (!selectedDifficulty) {
+      alert("Please select a difficulty");
+      return;
+    }
     setTitle("Loading...");
     setStatement("Loading...");
     setInput("Loading...");
@@ -88,8 +104,8 @@ export default function Home() {
     router.push("#problem");
     const res = await axiosBackInstance.post("/generateProblem", {
       ideaPrompt: idea,
-      problemTopic: problemTopic,
-      problemLevel: problemLevel,
+      problemTopic: selectedTags.join(","),
+      problemLevel: selectedDifficulty?.label,
       problemLanguage: language
     });
     const problem = res.data.message;
@@ -218,14 +234,16 @@ export default function Home() {
           setPolygonLoading(false);
           setIsProcessComplete(false);
         }} /></div>
-        <Link href="/" className="flex items-center w-full px-8 my-6">
+        <Link href="/" className="flex justify-center sm:justify-start items-center w-full px-8 my-6">
           <div className="h-[60px] w-[80px] relative">
             <Image src={logo} alt="logo" className="z-20" fill />
           </div>
           <div className="text-3xl font-syne font-bold">olympath</div>
         </Link>
         {/* user prompt */}
-        <UserPrompt idea={idea} setIdea={setIdea} language={language} setLanguage={setLanguage} problemLevel={problemLevel} setProblemLevel={setPRoblemLevel} problemTopic={problemTopic} setProblemTopic={setProblemTopic} handleSubmit={handleSubmit} />
+        <UserPrompt idea={idea} setIdea={setIdea} language={language} setLanguage={setLanguage}
+          selectedDifficulty={selectedDifficulty}
+          setSelectedDifficulty={setSelectedDifficulty} selectedTags={selectedTags} setSelectedTags={setSelectedTags} handleSubmit={handleSubmit} />
 
         {/* tab navigation */}
 
