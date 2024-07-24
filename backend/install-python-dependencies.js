@@ -1,6 +1,6 @@
 const { exec } = require('child_process');
 
-exec('pip install sys random uuid', (error, stdout, stderr) => {
+exec('python3 -m pip install sys random uuid', (error, stdout, stderr) => {
     if (error) {
         console.error(`Error installing Python dependencies: ${error.message}`);
         return;
