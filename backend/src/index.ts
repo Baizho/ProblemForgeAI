@@ -42,8 +42,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 
 // Database connection
@@ -58,6 +58,7 @@ app.post("/generateTests", async (req: Request, res: Response) => {
   const { number, input, output, testInput, testOutput } = req.body;
   try {
     const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
+    // console.log(generate_code);
 
     let data = qs.stringify({
       'code': generate_code,

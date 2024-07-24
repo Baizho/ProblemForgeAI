@@ -114,7 +114,7 @@ class GeminiService {
         try {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:
-            1. Use int(input()) for the total number of test cases.
+            1. You will be given the total number of test cases through input, so you must use int(input()) to input the total number of test cases.
             2. Store the test cases as strings in a 'test_cases' string array.
         
             Problem constraints:

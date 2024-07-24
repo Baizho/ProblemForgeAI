@@ -50,9 +50,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full lg:max-w-[80%] flex flex-col items-center justify-between h-[95%]">
                 <div className='w-full flex flex-col items-center h-full'>
-                    <div className='w-full flex flex-col items-center h-[35%]'>
-
-
+                    <div className='w-full flex flex-col items-center'>
                         {isProcessComplete ? (
                             <>
                                 <h2 className="text-2xl font-bold mb-4 font-raleway">Your problem has been created in Polygon</h2>
@@ -80,7 +78,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                         </div>
                     </div>
 
-                    <div className="mb-4 h-[55%] w-[55%]">
+                    <div className="mb-4 w-[100%] md:w-[80%] x:w-[75%] 2xl:w-[65%] aspect-video ">
                         <div className='relative w-full h-full border-[1px]'>
                             <Image
                                 src={steps[currentStep].src}
@@ -88,43 +86,50 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                                 fill
                             />
                         </div>
-                        <div className="flex justify-between mb-4  ">
-                            <button
-                                onClick={goToPrevStep}
-                                disabled={currentStep === 0}
-                                className={`py-2 px-4 text-xs rounded font-bold  font-raleway ${currentStep === 0
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-blue-500 hover:bg-blue-700 text-white'
-                                    }`}
-                            >
-                                Previous
-                            </button>
-                            <button
-                                onClick={goToNextStep}
-                                disabled={currentStep === steps.length - 1}
-                                className={`py-2 px-4 text-xs rounded font-bold  font-raleway ${currentStep === steps.length - 1
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-blue-500 hover:bg-blue-700 text-white'
-                                    }`}
-                            >
-                                Next
-                            </button>
-                        </div>
                     </div>
-
+                    <div className="flex w-full justify-center space-x-2 mb-4  ">
+                        <button
+                            onClick={goToPrevStep}
+                            disabled={currentStep === 0}
+                            className={`py-2 px-4 text-xs rounded font-bold  font-raleway ${currentStep === 0
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-700 text-white'
+                                }`}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={goToNextStep}
+                            disabled={currentStep === steps.length - 1}
+                            className={`py-2 px-4 text-xs rounded font-bold  font-raleway ${currentStep === steps.length - 1
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-700 text-white'
+                                }`}
+                        >
+                            Next
+                        </button>
+                    </div>
 
                 </div>
 
-                <button
-                    onClick={onClose}
-                    disabled={!isProcessComplete}
-                    className={`w-full py-2 px-4 rounded font-bold font-raleway ${isProcessComplete
-                        ? 'bg-blue-500 hover:bg-blue-700 text-white'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
-                >
-                    Did you finish the steps to add your problem?
-                </button>
+                <div className='flex w-full'>
+                    <button
+                        onClick={onClose}
+                        disabled={!isProcessComplete}
+                        className={`w-[85%] py-2 px-4 rounded font-bold font-raleway ${isProcessComplete
+                            ? 'bg-blue-500 hover:bg-blue-700 text-white'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                    >
+                        Did you finish the steps to add your problem?
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className={`w-[15%] py-2 px-4 rounded text-white font-bold font-raleway bg-red-500`}
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -164,31 +164,36 @@ export default function Home() {
 
 
     // await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
-    const res = await axiosBackInstance.post("/polygonAddProblemApi", {
-      title: title,
-      statement: statement,
-      input: input,
-      output: output,
-      testInput: testInput,
-      testOutput: testOutput,
-      notes: notes,
-      tests: testFiles,
-      user: user,
-      sol: sol,
-      timeLimit: timeLimit,
-      memoryLimit: memoryLimit,
-      problemLanguage: language,
-      userLang: userLang,
-      apiKey: apiKey,
-      apiSecret: secret,
-    });
-    const response = res.data;
-    if (response.message === "Problem created successfully!") {
-      alert("success, added to polygon!");
-    } else {
-      alert("error in sending to polygon");
+    try {
+      const res = await axiosBackInstance.post("/polygonAddProblemApi", {
+        title: title,
+        statement: statement,
+        input: input,
+        output: output,
+        testInput: testInput,
+        testOutput: testOutput,
+        notes: notes,
+        tests: testFiles,
+        user: user,
+        sol: sol,
+        timeLimit: timeLimit,
+        memoryLimit: memoryLimit,
+        problemLanguage: language,
+        userLang: userLang,
+        apiKey: apiKey,
+        apiSecret: secret,
+      });
+      const response = res.data;
+      if (response.message === "Problem created successfully!") {
+        alert("success, added to polygon!");
+      } else {
+        alert("error in sending to polygon");
+      }
+      setIsProcessComplete(true);
+    } catch (err: any) {
+      alert("errir in sending to polygon");
+      setPolygonLoading(false);
     }
-    setIsProcessComplete(true);
   }
 
   const generateSolution = async () => {
