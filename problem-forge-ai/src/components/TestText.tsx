@@ -25,8 +25,8 @@ const TestText = (props: Props) => {
             <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
                 <span className="font-semibold text-gray-700 font-mono">{name}</span>
                 <div className='flex space-x-2'>
-                    <button onClick={toggleShowTest} className=" font-raleway bg-blue-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Show Test</button>
-                    <button onClick={(e) => { deleteTest(id) }} className=" font-raleway bg-red-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-red-700">Delete Test</button>
+                    <button onClick={toggleShowTest} className="text-sm font-raleway bg-blue-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Show Test</button>
+                    <button onClick={(e) => { deleteTest(id) }} className="text-sm font-raleway bg-red-500 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline hover:bg-red-700">Delete Test</button>
                 </div>
             </div>
             {/* <div className="flex justify-between items-center">
