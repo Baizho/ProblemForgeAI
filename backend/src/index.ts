@@ -59,18 +59,38 @@ app.post("/generateTests", async (req: Request, res: Response) => {
   try {
     const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
 
-    const options: Options = {
-      mode: 'text',
-      // pythonPath: '/usr/bin/python3', // Specify the correct path to Python
-      args: [number.toString()]
+    let data = qs.stringify({
+      'code': generate_code,
+      'language': 'py',
+      'input': number.toString()
+    });
+    var config = {
+      method: 'post',
+      url: 'https://api.codex.jaagrav.in',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
     };
 
-    const response = await PythonShell.runString(generate_code, options);
-    // console.log(res[0]);
-    // return [generate_code];
-    const tests = JSON.parse(response[0].replace(/'/g, '"'));
-    // console.log(tests);
-    res.status(201).json({ tests });
+    try {
+      console.log("Generating tests");
+      const output = await axios(config)
+        .then(function (response) {
+          // console.log(JSON.stringify(response.data));
+          if (response.data.error) return response.data.error;
+          return response.data.output;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      // console.log("finished compile", output);
+      console.log("finished output");
+      res.status(201).json({ tests: JSON.parse(output.replace(/'/g, '"')) });
+    } catch (err: any) {
+      console.log("There is an error in compiling the code", err);
+      res.status(400).json(err);
+    }
   } catch (err: any) {
     console.error("Error generating tests", err);
     res.status(500).json({ message: "Error generating tests", err });

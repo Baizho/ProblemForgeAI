@@ -114,7 +114,7 @@ class GeminiService {
         try {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:
-            1. Use sys.argv[1] for the total number of test cases.
+            1. Use int(input()) for the total number of test cases.
             2. Store the test cases as strings in a 'test_cases' string array.
         
             Problem constraints:
@@ -133,7 +133,7 @@ class GeminiService {
             1. Define functions for random and edge cases.
             2. Calculate edge and random case counts.
             3. Generate all test cases as strings.
-            4. Return 'test_cases' array containing all generated test case strings.
+            4. Return 'test_cases' array containing all generated test case strings in the format of an array, this means you print your answer like: ['4 2 \\n 5', '2 5 \\n 2].
         
             Provide only the Python code, without explanations.
         `);
