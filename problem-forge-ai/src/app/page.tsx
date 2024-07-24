@@ -136,7 +136,7 @@ export default function Home() {
         testOutput: testOutput
       });
       const files = res.data.file_links;
-      setTestFiles(files);
+      setTestFiles([...testFiles, ...files]);
     } catch (err: any) {
       alert("There was an error generating tests");
     }
@@ -258,7 +258,7 @@ export default function Home() {
                 setError1={setError1}
                 error2={error2}
                 setError2={setError2} timeLimit={timeLimit} setTimeLimit={setTimeLimit} memoryLimit={memoryLimit} setMemoryLimit={setMemoryLimit} />}
-              {tab === "Tests" && <Tests testFiles={testFiles} handleTests={handleTests} countTests={countTests} setCountTests={setCountTests} testLoading={testLoading} />}
+              {tab === "Tests" && <Tests testFiles={testFiles} setTestFiles={setTestFiles} handleTests={handleTests} countTests={countTests} setCountTests={setCountTests} testLoading={testLoading} />}
               {tab === "Solution" && <Solution
                 sol={sol} setSol={setSol} generateSolution={generateSolution}
                 userLang={userLang}
