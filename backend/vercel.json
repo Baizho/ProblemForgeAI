@@ -2,8 +2,9 @@
     "version": 2,
     "builds": [
       {
-        "src": "Dockerfile",
-        "use": "@vercel/docker"
+        "src": "src/index.ts",
+        "use": "@vercel/node",
+        "config": { "includeFiles": ["dist/**"] }
       }
     ],
     "routes": [
@@ -13,7 +14,7 @@
       }
     ],
     "env": {
-      "PYTHON_VERSION": "3.9"
-    }
+        "PYTHON_VERSION": "3.9"
+      }
   }
   
