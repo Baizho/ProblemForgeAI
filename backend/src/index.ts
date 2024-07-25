@@ -42,61 +42,16 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ limit: '200mb', extended: true }));
+app.use(express.json({ limit: '1gb' }));
+app.use(express.urlencoded({ limit: '1gb', extended: true }));
 
 
 // Database connection
 // connectDB(); // Uncomment when you need to connect to the database
 
 // Routes
-// app.use(geminiRouter);
-app.use(claudeRouter);
-
-// Generate Tests API
-app.post("/generateTests", async (req: Request, res: Response) => {
-  const { number, input, output, testInput, testOutput } = req.body;
-  try {
-    const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
-    // console.log(generate_code);
-
-    let data = qs.stringify({
-      'code': generate_code,
-      'language': 'py',
-      'input': number.toString()
-    });
-    var config = {
-      method: 'post',
-      url: 'https://api.codex.jaagrav.in',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    try {
-      console.log("Generating tests");
-      const output = await axios(config)
-        .then(function (response) {
-          // console.log(JSON.stringify(response.data));
-          if (response.data.error) return response.data.error;
-          return response.data.output;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      // console.log("finished compile", output);
-      console.log("finished output");
-      res.status(201).json({ tests: JSON.parse(output.replace(/'/g, '"')) });
-    } catch (err: any) {
-      console.log("There is an error in compiling the code", err);
-      res.status(400).json(err);
-    }
-  } catch (err: any) {
-    console.error("Error generating tests", err);
-    res.status(500).json({ message: "Error generating tests", err });
-  }
-});
+app.use(geminiRouter);
+// app.use(claudeRouter);
 
 // Create Polygon problem using Puppeteer
 app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {

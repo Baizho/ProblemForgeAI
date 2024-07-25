@@ -26,10 +26,15 @@ interface Difficulty {
   color: string;
 }
 
+interface Language {
+  label: string;
+  value: string;
+}
+
 export default function Home() {
   const router = useRouter();
   const [idea, setIdea] = useState("");
-  const [language, setLanguage] = useState("english");
+  const [language, setLanguage] = useState<Language>({ label: "English", value: "english" });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
@@ -113,7 +118,7 @@ export default function Home() {
       setNotes(problem.example.explanation);
       setTestFiles([]);
     } catch (err: any) {
-      alert("Sorry, there was an error generating the problem, please explain in more detail or create something easier.");
+      alert("Sorry, there was an error generating the problem, please explain in more detail or create something easier or do not write anything inappropriate");
     }
     setStatementLoading(false);
   }
@@ -178,7 +183,7 @@ export default function Home() {
         sol: sol,
         timeLimit: timeLimit,
         memoryLimit: memoryLimit,
-        problemLanguage: language,
+        problemLanguage: language.value,
         userLang: userLang,
         apiKey: apiKey,
         apiSecret: secret,

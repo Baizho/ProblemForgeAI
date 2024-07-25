@@ -110,7 +110,7 @@ class GeminiService {
         }
     }
 
-    async generateTestGenerater(input: string, output: string, testInput: string, testOutput: string): Promise<string> {
+    async generateTestGenerater(input: string, output: string, testInput: string): Promise<string> {
         try {
             const res = await genModelTest.generateContent(`
             Create a Python script for generating test cases for a competitive programming problem:

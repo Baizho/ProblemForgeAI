@@ -36,6 +36,19 @@ class GeminiController {
             res.status(500).json({ message: "error generating problem", err });
         }
     }
+
+    generateTestGenerator = async (req: Request, res: Response): Promise<void> => {
+        const { input, output, testInput } = req.body();
+        try {
+            console.log("generating code for generator");
+            const generator = await this.geminiService.generateTestGenerater(input, output, testInput);
+            console.log("finished generating generator");
+            res.status(201).json(generator);
+        } catch (err: any) {
+            console.log("error generating the generator", err);
+            res.status(500).json({ message: "Eror generating the generator", err });
+        }
+    }
 }
 
 export default GeminiController;

@@ -127,7 +127,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                         onClick={onClose}
                         className={`w-[15%] py-2 px-4 rounded text-white font-bold font-raleway bg-red-500`}
                     >
-                        Cancel
+                        Close
                     </button>
                 </div>
             </div>

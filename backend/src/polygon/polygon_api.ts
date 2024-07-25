@@ -1,12 +1,10 @@
 import { v4 as uuid4 } from "uuid";
-import GeminiService from "../gemini/gemini-service";
 import axiosPolygonInstance from "./axiosInstance";
 import { sha512 } from "js-sha512";
 
+
 // const api_key = process.env.CODEFORCES_POLYGON_KEY;
 // const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
-
-const geminiService = new GeminiService();
 
 interface ParamsProp {
     apiKey: string;
@@ -15,7 +13,7 @@ interface ParamsProp {
 
 interface ApiParam {
     param: string;
-    value: string;
+    value: any;
 }
 
 interface ProblemProp {
@@ -38,6 +36,28 @@ const sortApiParams = (params: ApiParam[]): ApiParam[] => {
         return 0;
     });
 };
+
+// const getLink = async (slug: string, request: ApiParam[], apiKey: string, apiSecret: string): Promise<string> => {
+//     const sortedParams = sortApiParams(request);
+//     let link = slug;
+//     let hash = "123456" + slug;
+
+//     sortedParams.forEach((req, index) => {
+//         if (index > 0) {
+//             hash += "&";
+//             link += "&";
+//         }
+//         hash += `${req.param}=${btoa(req.value)}`;
+//         link += `${req.param}=${btoa(req.value)}`;
+
+//     });
+
+//     hash += `#${apiSecret}`;
+//     const hashed = sha512(hash);
+//     link += `&apiSig=123456${hashed}`;
+
+//     return link;
+// };
 
 const getLink = async (slug: string, request: ApiParam[], apiKey: string, apiSecret: string): Promise<string> => {
     const sortedParams = sortApiParams(request);
@@ -81,25 +101,44 @@ export default async function polygonAddProblemApi(
 ) {
     console.log("Running polygon!");
 
-    const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
-    if (!api_key || !api_secret) return;
+    const res = await getProblemById(370833, apiKey, apiSecret);
+    console.log(res);
 
-    const problem = await createNewProblem(title, api_key, api_secret);
-    // const problem = { id: 370833 };
-    if (problem) {
-        await Promise.all([
-            updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
-            updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
-            updateChecker(problem.id, checker, api_key, api_secret),
-            updateSolution(problem.id, solution, userLang, api_key, api_secret),
-            updateSample(problem.id, testInput, testOutput, api_key, api_secret),
-            updateTests(problem.id, tests, api_key, api_secret),
-        ])
-        await commitChanges(problem.id, api_key, api_secret);
-        await buildPackage(problem.id, api_key, api_secret);
+    // const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
+    // if (!api_key || !api_secret) return;
+
+    // const problem = await createNewProblem(title, api_key, api_secret);
+    // // const problem = { id: 370833 };
+    // if (problem) {
+    //     await Promise.all([
+    //         updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
+    //         updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
+    //         updateChecker(problem.id, checker, api_key, api_secret),
+    //         updateSolution(problem.id, solution, userLang, api_key, api_secret),
+    //         updateSample(problem.id, testInput, testOutput, api_key, api_secret),
+    //         updateTests(problem.id, tests, api_key, api_secret),
+    //     ])
+    //     await commitChanges(problem.id, api_key, api_secret);
+    //     await buildPackage(problem.id, api_key, api_secret);
+    // }
+
+    // console.log("Polygon finished");
+}
+
+async function saveFile(type: string, file: string, sourceType: string, apiKey: string, apiSecret: string) {
+    try {
+        const link = await getLink("/problem.saveFile?", [
+            { param: "apiKey", value: apiKey },
+            { param: "time", value: Math.round(Date.now() / 1000).toString() },
+            { param: "type", value: type },
+            { param: "file", value: file },
+            { param: "sourceType", value: sourceType }
+        ], apiKey, apiSecret)
+
+        await axiosPolygonInstance.get(link);
+    } catch (err: any) {
+        console.log(`there was an error in saving file of type ${type}`, err);
     }
-
-    console.log("Polygon finished");
 }
 
 async function buildPackage(id: number, apiKey: string, apiSecret: string) {
@@ -262,11 +301,13 @@ async function updateSolution(id: number, solution: string, userLang: string, ap
 
 async function getProblemById(id: number, apiKey: string, apiSecret: string): Promise<any> {
     try {
+        const time = Math.round(Date.now() / 1000).toString();
         const link = await getLink("/problems.list?", [
             { param: "apiKey", value: apiKey },
-            { param: "time", value: Math.round(Date.now() / 1000).toString() },
+            { param: "time", value: time },
             { param: "id", value: id.toString() }
         ], apiKey, apiSecret);
+        // console.log(link);
         const res = await axiosPolygonInstance.get(link);
         return res.data;
     } catch (err) {

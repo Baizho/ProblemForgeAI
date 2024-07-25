@@ -1,12 +1,12 @@
 import axios from "axios";
 
-// const axiosBackInstance = axios.create({
-//     baseURL: 'http://localhost:5000', // Replace with your API base URL
-// });
-
 const axiosBackInstance = axios.create({
-    baseURL: 'https://olympath-ai-backend.vercel.app', // Replace with your API base URL
+    baseURL: 'http://localhost:5000', // Replace with your API base URL
 });
+
+// const axiosBackInstance = axios.create({
+//     baseURL: 'https://olympath-ai-backend.vercel.app', // Replace with your API base URL
+// });
 
 // Request interceptor
 axiosBackInstance.interceptors.request.use(

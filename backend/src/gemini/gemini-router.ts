@@ -8,5 +8,6 @@ const geminiController = new GeminiController(geminiService);
 
 geminiRouter.post("/generateProblem", geminiController.generateProblem);
 geminiRouter.post("/generateSolution", geminiController.generateSolution);
+geminiRouter.post("/generateTestGenerator", geminiController.generateTestGenerator);
 
 export default geminiRouter;

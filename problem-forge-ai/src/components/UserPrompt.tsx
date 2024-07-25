@@ -5,17 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BiReset } from 'react-icons/bi';
 import TagsDropdown from './Dropdowns/TagsDropdown';
 import DifficultyDropdown from './Dropdowns/DifficultyDropdown';
+import LanguageDropdown from './Dropdowns/LanguageDropdown';
 
 interface Difficulty {
     label: string;
     color: string;
 }
 
+interface Language {
+    label: string;
+    value: string;
+}
+
 type Props = {
     idea: string,
     setIdea: Dispatch<SetStateAction<string>>,
-    language: string,
-    setLanguage: Dispatch<SetStateAction<string>>,
+    language: Language,
+    setLanguage: Dispatch<SetStateAction<Language>>,
     selectedTags: string[],
     setSelectedTags: Dispatch<SetStateAction<string[]>>,
     handleSubmit: (e: FormEvent<HTMLFormElement>) => {},
@@ -26,6 +32,7 @@ type Props = {
 const UserPrompt = ({ idea, setIdea, language, setLanguage, selectedTags, setSelectedTags, selectedDifficulty, setSelectedDifficulty, handleSubmit }: Props) => {
     const [isTagsDropdownOpen, setIsTagsDropdownOpen] = useState(false);
     const [isDifficultyDropdownOpen, setIsDifficultyDropdownOpen] = useState(false);
+    const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
     return (
         <>
             <div className="z-10 flex flex-col items-center min-h-screen py-12 bg-gray-100">
@@ -44,19 +51,8 @@ const UserPrompt = ({ idea, setIdea, language, setLanguage, selectedTags, setSel
                 <form className="z-20 flex flex-col items-center w-full h-full" onSubmit={handleSubmit}>
                     <div className='w-full flex justify-center'>
                         <div className='flex flex-wrap w-[95%]'>
-                            <div className='w-full xl:w-1/4 md:w-1/2 pl-2  mb-4 font-raleway'>
-                                <label htmlFor="language" className="font-semibold font-raleway">Language</label>
-                                <div className='mb-2 text-sm'>Choose your language</div>
-                                <select
-                                    id="language"
-                                    className="font-raleway w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none"
-                                    value={language}
-                                    onChange={(e) => setLanguage(e.target.value)}
-                                >
-                                    <option value="english">English</option>
-                                    <option value="russian">Russian</option>
-                                </select>
-                            </div>
+
+                            <LanguageDropdown selectedLanguage={language} setSelectedLanguage={setLanguage} isLanguageDropdownOpen={isLanguageDropdownOpen} setIsLanguageDropdownOpen={setIsLanguageDropdownOpen} />
 
                             <div className='w-full xl:w-1/4 md:w-1/2 pl-2 mb-4 font-raleway'>
                                 <label htmlFor="problemIdea" className="font-semibold font-raleway">Problem Idea</label>
