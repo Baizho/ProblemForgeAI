@@ -187,12 +187,12 @@ export default function Home() {
       if (response.message === "Problem created successfully!") {
         alert("success, added to polygon!");
       } else {
-        alert("error in sending to polygon");
+        alert("error in sending to polygon. Maybe polygon is down or has verification on! There might be a contest going on!");
         setPolygonLoading(false);
       }
       setIsProcessComplete(true);
     } catch (err: any) {
-      alert("errir in sending to polygon");
+      alert("error in sending to polygon. Maybe polygon is down or has verification on! There might be a contest going on!");
       setPolygonLoading(false);
     }
   }
