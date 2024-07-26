@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Competitive Programming Problem Generator",
   description: "Generate problems using codeforces polygon and AI",
   icons: {
-    icon: '/logoOlympath Icon.png', // /public/favicon.ico
+    icon: '/logoOlympath.png', // /public/favicon.ico
     // or
     // icon: [
     //   { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
