@@ -162,7 +162,7 @@ export default function Home() {
     setPolygonLoading(true);
     setIsProcessComplete(false);
 
-
+    console.log("Sending");
     // await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
     try {
       const res = await axiosBackInstance.post("/polygonAddProblemApi", {
@@ -188,6 +188,7 @@ export default function Home() {
         alert("success, added to polygon!");
       } else {
         alert("error in sending to polygon");
+        setPolygonLoading(false);
       }
       setIsProcessComplete(true);
     } catch (err: any) {

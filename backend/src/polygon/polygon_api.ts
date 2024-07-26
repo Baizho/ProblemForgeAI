@@ -84,22 +84,29 @@ export default async function polygonAddProblemApi(
     const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
     if (!api_key || !api_secret) return;
 
-    const problem = await createNewProblem(title, api_key, api_secret);
-    // const problem = { id: 370833 };
-    if (problem) {
-        await Promise.all([
-            updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
-            updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
-            updateChecker(problem.id, checker, api_key, api_secret),
-            updateSolution(problem.id, solution, userLang, api_key, api_secret),
-            updateSample(problem.id, testInput, testOutput, api_key, api_secret),
-            updateTests(problem.id, tests, api_key, api_secret),
-        ])
-        await commitChanges(problem.id, api_key, api_secret);
-        await buildPackage(problem.id, api_key, api_secret);
+    try {
+        const problem = await createNewProblem(title, api_key, api_secret);
+        // const problem = { id: 370833 };
+        if (problem) {
+            await Promise.all([
+                updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
+                updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
+                updateChecker(problem.id, checker, api_key, api_secret),
+                updateSolution(problem.id, solution, userLang, api_key, api_secret),
+                updateSample(problem.id, testInput, testOutput, api_key, api_secret),
+                updateTests(problem.id, tests, api_key, api_secret),
+            ])
+            await commitChanges(problem.id, api_key, api_secret);
+            await buildPackage(problem.id, api_key, api_secret);
+            return "Problem created successfully!";
+        } else {
+            return "Error";
+        }
+        console.log("Polygon finished");
+    } catch (err: any) {
+        console.error("erorr happened in adding to polygon");
     }
 
-    console.log("Polygon finished");
 }
 
 async function buildPackage(id: number, apiKey: string, apiSecret: string) {
