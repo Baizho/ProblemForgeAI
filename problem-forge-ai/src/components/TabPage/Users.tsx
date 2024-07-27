@@ -2,15 +2,13 @@ import Link from 'next/link'
 import React, { Dispatch, SetStateAction } from 'react'
 
 type Props = {
-    user: string,
-    setUser: Dispatch<SetStateAction<string>>,
     apiKey: string,
     setApiKey: Dispatch<SetStateAction<string>>,
     secret: string,
     setSecret: Dispatch<SetStateAction<string>>,
 }
 
-const Users = ({ user, setUser, apiKey, setApiKey, secret, setSecret }: Props) => {
+const Users = ({ apiKey, setApiKey, secret, setSecret }: Props) => {
     return (
         <>
             {/* <label htmlFor="user" className="font-semibold text-sm">Share access to user:</label>

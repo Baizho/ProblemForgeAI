@@ -9,8 +9,8 @@ import Image from 'next/image';
 import TextareaAutosize from 'react-textarea-autosize';
 
 type Props = {
-    sol: string;
-    setSol: Dispatch<SetStateAction<string>>;
+    solution: string;
+    setSolution: Dispatch<SetStateAction<string>>;
     generateSolution: () => Promise<void>;
     userLang: string;
     setUserLang: Dispatch<SetStateAction<string>>;
@@ -25,8 +25,8 @@ type Props = {
 };
 
 const Solution = ({
-    sol,
-    setSol,
+    solution,
+    setSolution,
     generateSolution,
     userLang,
     setUserLang,
@@ -53,14 +53,14 @@ const Solution = ({
     // Function to call the compile endpoint
     function compile() {
         setLoading(true);
-        if (sol === ``) {
+        if (solution === ``) {
             setLoading(false);
             return;
         }
 
         // Post request to compile endpoint
         axiosBackInstance.post(`/compile`, {
-            code: sol,
+            code: solution,
             language: userLang,
             input: userInput
         }).then((res) => {
@@ -109,8 +109,8 @@ const Solution = ({
                         language={userLang}
                         defaultLanguage="cpp"
                         defaultValue="# Enter your code here"
-                        value={sol}
-                        onChange={(value) => { if (value) setSol(value) }}
+                        value={solution}
+                        onChange={(value) => { if (value) setSolution(value) }}
                     />
                     <button
                         className="mt-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700"

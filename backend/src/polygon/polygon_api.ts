@@ -2,10 +2,6 @@ import { v4 as uuid4 } from "uuid";
 import axiosPolygonInstance from "./axiosInstance";
 import { sha512 } from "js-sha512";
 
-
-// const api_key = process.env.CODEFORCES_POLYGON_KEY;
-// const api_secret = process.env.CODEFORCES_POLYGON_SECRET;
-
 interface ParamsProp {
     apiKey: string;
     time: number;
@@ -81,49 +77,7 @@ const getLink = async (slug: string, request: ApiParam[], apiKey: string, apiSec
     return link;
 };
 
-export default async function polygonAddProblemApi(
-    title: string,
-    statement: string,
-    input: string,
-    output: string,
-    testInput: string,
-    testOutput: string,
-    notes: string,
-    tests: string[],
-    user: string,
-    solution: string,
-    timeLimit: number,
-    memoryLimit: number,
-    problemLanguage: string,
-    userLang: string,
-    apiKey: string,
-    apiSecret: string
-) {
-    console.log("Running polygon!");
 
-    const res = await getProblemById(370833, apiKey, apiSecret);
-    console.log(res);
-
-    // const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
-    // if (!api_key || !api_secret) return;
-
-    // const problem = await createNewProblem(title, api_key, api_secret);
-    // // const problem = { id: 370833 };
-    // if (problem) {
-    //     await Promise.all([
-    //         updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
-    //         updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
-    //         updateChecker(problem.id, checker, api_key, api_secret),
-    //         updateSolution(problem.id, solution, userLang, api_key, api_secret),
-    //         updateSample(problem.id, testInput, testOutput, api_key, api_secret),
-    //         updateTests(problem.id, tests, api_key, api_secret),
-    //     ])
-    //     await commitChanges(problem.id, api_key, api_secret);
-    //     await buildPackage(problem.id, api_key, api_secret);
-    // }
-
-    // console.log("Polygon finished");
-}
 
 async function saveFile(type: string, file: string, sourceType: string, apiKey: string, apiSecret: string) {
     try {

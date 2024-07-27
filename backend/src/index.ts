@@ -8,14 +8,10 @@ import GeminiService from "./gemini/gemini-service";
 import claudeRouter from "./claude/cluade-router";
 import ClaudeService from "./claude/claude-service";
 
-import polygonAddProblemPuppeteer from "./polygon/polygon_full_puppeteer";
-import polygonAddProblemApi from "./polygon/polygon_api";
-
-import { PythonShell, Options } from 'python-shell';
+import polygonRouter from "./polygon/polygon-router";
 
 import axios from "axios";
 import qs from 'qs';
-import bodyParser from "body-parser";
 
 const app = express();
 const geminiService = new GeminiService();
@@ -52,38 +48,22 @@ app.use(express.urlencoded({ limit: '1gb', extended: true }));
 // Routes
 app.use(geminiRouter);
 // app.use(claudeRouter);
+app.use(polygonRouter);
 
 // Create Polygon problem using Puppeteer
-app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, userLang } = req.body;
-  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
+// app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
+//   const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, userLang } = req.body;
+//   let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
 
-  try {
-    await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
-    res.status(201).json({ message: "Problem created successfully!" });
-  } catch (err: any) {
-    console.error("Error creating problem", err);
-    res.status(500).json({ message: "Error creating problem", err });
-  }
-});
+//   try {
+//     await polygonAddProblemPuppeteer(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit);
+//     res.status(201).json({ message: "Problem created successfully!" });
+//   } catch (err: any) {
+//     console.error("Error creating problem", err);
+//     res.status(500).json({ message: "Error creating problem", err });
+//   }
+// });
 
-
-
-
-// Create Polygon problem using API
-app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
-  // console.log(encodeURIComponent("//\ hello @#@  "));
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret } = req.body;
-  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
-
-  try {
-    await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret);
-    res.status(201).json({ message: "Problem created successfully!" });
-  } catch (err: any) {
-    console.error("Error creating problem with API", err);
-    res.status(500).json({ message: "Error creating problem", err });
-  }
-});
 
 // Root route
 app.get("/", async (req: Request, res: Response) => {

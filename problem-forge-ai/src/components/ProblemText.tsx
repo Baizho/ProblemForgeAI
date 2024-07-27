@@ -1,73 +1,69 @@
-import React from 'react'
-
+import React from 'react';
 import 'katex/dist/katex.min.css';
-import Latex from "react-latex-next";
+import Latex from 'react-latex-next';
 
 type Props = {
     text: string;
-}
+};
 
-interface Message {
-    center?: boolean,
-    message: string
-}
+const ProblemText: React.FC<Props> = ({ text }) => {
+    // Replace newline markers with LaTeX-friendly newlines
+    let processedText = text.replace(/\$\\newline\$|\\newline/g, '\\n');
 
-const ProblemText = (props: Props) => {
-    let text = props.text.replaceAll("$\\newline$", "\\n").replaceAll("\\newline", "\\n");
-    let str = "", res = "", inside = 0;
+    let result = '';
+    let currentStr = '';
+    let insideDollarSign = false;
 
-    for (let i = 0; i < text.length; i += 1) {
-        if (text[i] === '-') str += "-";
-        else {
-            if (str.length > 1) {
-                if (inside) res += `\\text{${str}}`;
-                else res += `$\\text{${str}}$`;
-            } else res += str;
-            str = "";
-            if (text[i] === '$') {
-                inside ^= 1;
+    // Process the text to handle LaTeX formatting
+    for (let i = 0; i < processedText.length; i++) {
+        const char = processedText[i];
+
+        if (char === '-') {
+            currentStr += '-';
+        } else {
+            if (currentStr.length > 1) {
+                result += insideDollarSign ? `\\text{${currentStr}}` : `$\\text{${currentStr}}$`;
+            } else {
+                result += currentStr;
             }
-            res += text[i];
+            currentStr = '';
+
+            if (char === '$') {
+                insideDollarSign = !insideDollarSign;
+            }
+            result += char;
         }
     }
-    // console.log(res);
-    text = res;
-    res = "", str = "", inside = 0;
-    for (let i = 0; i < text.length; i += 1) {
-        if (text[i] === '\n') {
-            // console.log(i, text[i], text[i - 1]);
-            if (str.length > 0) {
-                str += "~\\\\";
-            } else str += "\\\\";
-        }
-        // else if (text[i] === ' ') {
-        //     console.log(i);
-        // }
-        else {
-            if (str) {
-                // str += "~\\\\";
-                // console.log(i, text[i], text[i - 1], str);
-                if (inside) res += `${str}`;
-                else res += `$${str}$`;
-            }
-            str = "";
-            if (text[i] === '$') {
-                inside ^= 1;
-            }
-            res += text[i];
-        }
 
-    } if (str) {
-        // str += "~\\\\";
-        if (inside) res += `${str}`;
-        else res += `$${str}$`;
+    processedText = result;
+    result = '';
+    currentStr = '';
+    insideDollarSign = false;
+
+    // Handle LaTeX formatting and newlines
+    for (let i = 0; i < processedText.length; i++) {
+        const char = processedText[i];
+
+        if (char === '\n') {
+            currentStr += currentStr.length > 0 ? '~\\\\' : '\\\\';
+        } else {
+            if (currentStr) {
+                result += insideDollarSign ? `${currentStr}` : `$${currentStr}$`;
+            }
+            currentStr = '';
+
+            if (char === '$') {
+                insideDollarSign = !insideDollarSign;
+            }
+            result += char;
+        }
     }
-    // console.log(res);
-    return (
-        <>
-            <Latex>{res}</Latex>
-        </>
-    )
-}
 
-export default ProblemText
+    if (currentStr) {
+        result += insideDollarSign ? `${currentStr}` : `$${currentStr}$`;
+    }
+
+    return <Latex>{result}</Latex>;
+};
+
+export default ProblemText;

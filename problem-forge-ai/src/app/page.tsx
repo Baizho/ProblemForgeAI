@@ -1,8 +1,6 @@
-'use client'
+'use client';
 
-// import "./globals.css";
-
-import { FormEvent, memo, MouseEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosBackInstance from "./axiosInstance";
 import ProblemText from "@/components/ProblemText";
@@ -14,8 +12,6 @@ import Users from "@/components/TabPage/Users";
 import Solution from "@/components/TabPage/Solution";
 import Constraints from "@/components/TabPage/Constraints";
 import spinner from '@/../public/loadingCode.svg';
-
-
 import Image from "next/image";
 import logo from "@/../public/logoOlympath.png";
 import Link from "next/link";
@@ -33,32 +29,26 @@ interface Language {
 
 export default function Home() {
   const router = useRouter();
+
+  // State variables for problem generation form
   const [idea, setIdea] = useState("");
   const [language, setLanguage] = useState<Language>({ label: "English", value: "english" });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
-  // State variable to set editors default language
+  // State variables for editor settings
   const [userLang, setUserLang] = useState("cpp");
-
-  // State variable to set editors default theme
   const [userTheme, setUserTheme] = useState("vs-dark");
-
-  // State variable to set editors default font size
   const [fontSize, setFontSize] = useState(15);
-
-  // State variable to set users input
   const [userInput, setUserInput] = useState("");
-
-  // State variable to set users output
   const [userOutput, setUserOutput] = useState("");
 
+  // State variables for tab navigation
   const [tab, setTab] = useState<"Statement" | "Constraints" | "Tests" | "Users" | "Solution">("Statement");
 
-  const [user, setUser] = useState("");
-
+  // State variables for problem data
   const [statementLoading, setStatementLoading] = useState(false);
-  const [sol, setSol] = useState("");
+  const [solution, setSolution] = useState("");
   const [title, setTitle] = useState("");
   const [statement, setStatement] = useState("");
   const [input, setInput] = useState("");
@@ -67,27 +57,32 @@ export default function Home() {
   const [testOutput, setTestOutput] = useState("");
   const [notes, setNotes] = useState("");
 
+  // State variables for user credentials
   const [apiKey, setApiKey] = useState("");
   const [secret, setSecret] = useState("");
 
+  // State variables for constraints
   const [timeLimit, setTimeLimit] = useState(1000);
   const [memoryLimit, setMemoryLimit] = useState(256);
 
+  // State variables for test generation
   const [testFiles, setTestFiles] = useState<string[]>([]);
   const [testLoading, setTestLoading] = useState(false);
   const [countTests, setCountTests] = useState(10);
 
+  // State variables for error handling
   const [error1, setError1] = useState("");
   const [error2, setError2] = useState("");
 
+  // State variables for loading indicators
   const [polygonLoading, setPolygonLoading] = useState(false);
   const [isProcessComplete, setIsProcessComplete] = useState(false);
 
-
+  // Handle form submission for problem generation
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!idea) {
-      alert("Please write a idea for a problem");
+      alert("Please write an idea for a problem");
       return;
     }
     if (selectedTags.length === 0) {
@@ -105,10 +100,9 @@ export default function Home() {
         ideaPrompt: idea,
         problemTopic: selectedTags.join(","),
         problemLevel: selectedDifficulty?.label,
-        problemLanguage: language
+        problemLanguage: language.value,
       });
       const problem = res.data.message;
-      // console.log(problem);
       setTitle(problem.title);
       setStatement(problem.statement);
       setInput(problem.input);
@@ -118,16 +112,16 @@ export default function Home() {
       setNotes(problem.example.explanation);
       setTestFiles([]);
     } catch (err: any) {
-      alert("Sorry, there was an error generating the problem, please explain in more detail or create something easier or do not write anything inappropriate");
+      alert("Error generating the problem. Please provide more details or avoid inappropriate content.");
     }
     setStatementLoading(false);
-  }
+  };
 
-
+  // Handle test generation
   const handleTests = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!title || !statement || !input || !output) {
-      alert("make sure to fill in title, statement, input, output");
+      alert("Please fill in title, statement, input, and output fields.");
       return;
     }
     setTestLoading(true);
@@ -142,68 +136,15 @@ export default function Home() {
       const files = res.data.tests;
       setTestFiles([...testFiles, ...files]);
     } catch (err: any) {
-      alert("There was an error generating tests");
+      alert("Error generating tests.");
     }
-    // console.log(file_links);
     setTestLoading(false);
-  }
+  };
 
-  const submitPolygon = async () => {
-    if (!apiKey || !secret) {
-      alert("Please add your api key or secret");
-      setTab("Users");
-      return;
-    }
-    if (error1 || error2) {
-      alert("You have errors in your Constraints tab");
-      setTab("Constraints");
-      return;
-    }
-    if (testFiles.length === 0) {
-      alert("You forgot to generate tests");
-      setTab("Tests")
-      return;
-    }
-    setPolygonLoading(true);
-    setIsProcessComplete(false);
-
-
-    // await new Promise(resolve => setTimeout(resolve, 10000)); // Simulating 20-second process
-    try {
-      const res = await axiosBackInstance.post("/polygonAddProblemApi", {
-        title: title,
-        statement: statement,
-        input: input,
-        output: output,
-        testInput: testInput,
-        testOutput: testOutput,
-        notes: notes,
-        tests: testFiles,
-        user: user,
-        sol: sol,
-        timeLimit: timeLimit,
-        memoryLimit: memoryLimit,
-        problemLanguage: language.value,
-        userLang: userLang,
-        apiKey: apiKey,
-        apiSecret: secret,
-      });
-      const response = res.data;
-      if (response.message === "Problem created successfully!") {
-        alert("success, added to polygon!");
-      } else {
-        alert("error in sending to polygon");
-      }
-      setIsProcessComplete(true);
-    } catch (err: any) {
-      alert("errir in sending to polygon");
-      setPolygonLoading(false);
-    }
-  }
-
+  // Generate solution for the problem
   const generateSolution = async () => {
     if (!title || !statement || !input || !output || !testInput || !testOutput) {
-      alert("make sure to fill in title, statement, input, output");
+      alert("Please fill in title, statement, input, output fields.");
       return;
     }
     const res = await axiosBackInstance.post("/generateSolution", {
@@ -216,12 +157,11 @@ export default function Home() {
       userLang: userLang,
     });
     const response = res.data;
-    setSol(response.message);
-  }
+    setSolution(response.message);
+  };
 
+  // Handle copy input button click
   const [copiedInput, setCopiedInput] = useState(false);
-  const [copiedOutput, setCopiedOutput] = useState(false);
-
   const copyInput = () => {
     navigator.clipboard.writeText(testInput).then(() => {
       setCopiedInput(true);
@@ -229,6 +169,8 @@ export default function Home() {
     });
   };
 
+  // Handle copy output button click
+  const [copiedOutput, setCopiedOutput] = useState(false);
   const copyOutput = () => {
     navigator.clipboard.writeText(testOutput).then(() => {
       setCopiedOutput(true);
@@ -238,58 +180,116 @@ export default function Home() {
 
   return (
     <>
-      <div id="enterIdea" className=" min-h-screen flex flex-col z-10 bg-gray-100">
-        <div className="h-full w-full"><LoadingModal isLoading={polygonLoading} isProcessComplete={isProcessComplete} onClose={() => {
-          setPolygonLoading(false);
-          setIsProcessComplete(false);
-        }} /></div>
+      <div id="enterIdea" className="min-h-screen flex flex-col z-10 bg-gray-100">
+        <div className="h-full w-full">
+          <LoadingModal
+            isLoading={polygonLoading}
+            isProcessComplete={isProcessComplete}
+            onClose={() => {
+              setPolygonLoading(false);
+              setIsProcessComplete(false);
+            }}
+          />
+        </div>
+
         <Link href="/" className="flex justify-center sm:justify-start items-center w-full px-8 my-6">
           <div className="h-[60px] w-[80px] relative">
             <Image src={logo} alt="logo" className="z-20" fill />
           </div>
           <div className="text-3xl font-syne font-bold">olympath</div>
         </Link>
-        {/* user prompt */}
-        <UserPrompt idea={idea} setIdea={setIdea} language={language} setLanguage={setLanguage}
+
+        {/* User Prompt */}
+        <UserPrompt
+          idea={idea}
+          setIdea={setIdea}
+          language={language}
+          setLanguage={setLanguage}
           selectedDifficulty={selectedDifficulty}
-          setSelectedDifficulty={setSelectedDifficulty} selectedTags={selectedTags} setSelectedTags={setSelectedTags} handleSubmit={handleSubmit} />
+          setSelectedDifficulty={setSelectedDifficulty}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          handleSubmit={handleSubmit}
+        />
 
-        {/* tab navigation */}
-
-        {/* Tab Pages */}
+        {/* Tab Navigation */}
         <div id="problem" className="flex flex-col">
           <TabNavigation tab={tab} setTab={setTab} />
-          <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-            <div className=" bg-gray-100 p-6 flex flex-col">
 
-              {tab === "Statement" && <Statement title={title} setTitle={setTitle} statement={statement} setStatement={setStatement} input={input} setInput={setInput} output={output} setOutput={setOutput} testInput={testInput} setTestInput={setTestInput} testOutput={testOutput} setTestOutput={setTestOutput} notes={notes} setNotes={setNotes} />}
-              {tab === "Constraints" && <Constraints error1={error1}
-                setError1={setError1}
-                error2={error2}
-                setError2={setError2} timeLimit={timeLimit} setTimeLimit={setTimeLimit} memoryLimit={memoryLimit} setMemoryLimit={setMemoryLimit} />}
-              {tab === "Tests" && <Tests testFiles={testFiles} setTestFiles={setTestFiles} handleTests={handleTests} countTests={countTests} setCountTests={setCountTests} testLoading={testLoading} />}
-              {tab === "Solution" && <Solution
-                sol={sol} setSol={setSol} generateSolution={generateSolution}
-                userLang={userLang}
-                setUserLang={setUserLang}
-                userTheme={userTheme}
-                setUserTheme={setUserTheme}
-                fontSize={fontSize}
-                setFontSize={setFontSize}
-                userInput={userInput}
-                setUserInput={setUserInput}
-                userOutput={userOutput}
-                setUserOutput={setUserOutput}
-              />
-              }
-              {tab === "Users" && <Users user={user} setUser={setUser} apiKey={apiKey} setApiKey={setApiKey} secret={secret} setSecret={setSecret} />}
+          <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+            <div className="bg-gray-100 p-6 flex flex-col">
+              {tab === "Statement" && (
+                <Statement
+                  title={title}
+                  setTitle={setTitle}
+                  statement={statement}
+                  setStatement={setStatement}
+                  input={input}
+                  setInput={setInput}
+                  output={output}
+                  setOutput={setOutput}
+                  testInput={testInput}
+                  setTestInput={setTestInput}
+                  testOutput={testOutput}
+                  setTestOutput={setTestOutput}
+                  notes={notes}
+                  setNotes={setNotes}
+                />
+              )}
+              {tab === "Constraints" && (
+                <Constraints
+                  error1={error1}
+                  setError1={setError1}
+                  error2={error2}
+                  setError2={setError2}
+                  timeLimit={timeLimit}
+                  setTimeLimit={setTimeLimit}
+                  memoryLimit={memoryLimit}
+                  setMemoryLimit={setMemoryLimit}
+                />
+              )}
+              {tab === "Tests" && (
+                <Tests
+                  testFiles={testFiles}
+                  setTestFiles={setTestFiles}
+                  handleTests={handleTests}
+                  countTests={countTests}
+                  setCountTests={setCountTests}
+                  testLoading={testLoading}
+                />
+              )}
+              {tab === "Solution" && (
+                <Solution
+                  solution={solution}
+                  setSolution={setSolution}
+                  generateSolution={generateSolution}
+                  userLang={userLang}
+                  setUserLang={setUserLang}
+                  userTheme={userTheme}
+                  setUserTheme={setUserTheme}
+                  fontSize={fontSize}
+                  setFontSize={setFontSize}
+                  userInput={userInput}
+                  setUserInput={setUserInput}
+                  userOutput={userOutput}
+                  setUserOutput={setUserOutput}
+                />
+              )}
+              {tab === "Users" && (
+                <Users
+                  apiKey={apiKey}
+                  setApiKey={setApiKey}
+                  secret={secret}
+                  setSecret={setSecret}
+                />
+              )}
             </div>
 
-            <div className=" bg-gray-100 p-6 flex flex-col h-full">
+            <div className="bg-gray-100 p-6 flex flex-col h-full">
               <div className="font-semibold text-sm h-[20px]">Preview</div>
-              <div className="flex flex-col h-[100%] border-[1px] border-gray-300 bg-white px-6 py-2  overflow-y-auto  relative">
+              <div className="flex flex-col h-[100%] border-[1px] border-gray-300 bg-white px-6 py-2 overflow-y-auto relative">
                 {statementLoading && (
-                  <div className='w-full h-full flex items-center -my-2 -mx-6 justify-center absolute bg-gray-100  bg-opacity-75 z-30'>
+                  <div className='w-full h-full flex items-center -my-2 -mx-6 justify-center absolute bg-gray-100 bg-opacity-75 z-30'>
                     <div className="w-[25%] h-[25%] z-20 absolute">
                       <Image src={spinner} alt="Generating..." fill className="animate-spin" />
                     </div>
@@ -303,13 +303,17 @@ export default function Home() {
                 <div className="text-sm font-mono mt-6"><ProblemText text={statement} /></div>
 
                 {input && (
-                  <><div className="font-semibold text-sm mt-6">Input</div>
-                    <div className="text-sm font-mono mt-3"><ProblemText text={input} /></div></>
+                  <>
+                    <div className="font-semibold text-sm mt-6">Input</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={input} /></div>
+                  </>
                 )}
-                {output &&
-                  <><div className="font-semibold text-sm mt-6">Output</div>
-                    <div className="text-sm font-mono mt-3"><ProblemText text={output} /></div></>
-                }
+                {output && (
+                  <>
+                    <div className="font-semibold text-sm mt-6">Output</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={output} /></div>
+                  </>
+                )}
                 {(testInput || testOutput) && (
                   <>
                     <div className="font-semibold text-sm mt-6">Sample</div>
@@ -325,9 +329,8 @@ export default function Home() {
                       </div>
                       <div className="font-mono w-full border-b-[1px] min-h-[30px] border-black px-[6px] bg-gray-100 text-sm text-amber-950 whitespace-pre-wrap">
                         {testInput}
-
                       </div>
-                      <div className="flex justify-between items-center  w-full border-b-[1px] border-black px-[6px] font-semibold text-sm py-1">
+                      <div className="flex justify-between items-center w-full border-b-[1px] border-black px-[6px] font-semibold text-sm py-1">
                         output
                         <button
                           onClick={copyOutput}
@@ -340,22 +343,17 @@ export default function Home() {
                     </div>
                   </>
                 )}
-
-                {notes &&
-                  <><div className="font-semibold text-sm mt-6">Notes</div>
-                    <div className="text-sm font-mono mt-3"><ProblemText text={notes} /></div></>
-                }
+                {notes && (
+                  <>
+                    <div className="font-semibold text-sm mt-6">Notes</div>
+                    <div className="text-sm font-mono mt-3"><ProblemText text={notes} /></div>
+                  </>
+                )}
               </div>
             </div>
-
-          </div >
+          </div>
         </div>
-
-        <button className="bg-blue-500 font-raleway text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 shadow-md transition duration-300" onClick={submitPolygon}>
-          Create Problem to Polygon
-        </button>
-
-      </div >
+      </div>
     </>
   );
 }

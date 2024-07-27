@@ -18,7 +18,21 @@ type Props = {
     setNotes: Dispatch<SetStateAction<string>>,
 }
 
-const Statement = ({ title, setTitle, statement, setStatement, input, setInput, output, setOutput, testInput, setTestInput, testOutput, setTestOutput, notes, setNotes }: Props) => {
+const Statement = ({
+    title,
+    setTitle,
+    statement,
+    setStatement,
+    input,
+    setInput,
+    output,
+    setOutput,
+    testInput,
+    setTestInput,
+    testOutput,
+    setTestOutput,
+    notes,
+    setNotes }: Props) => {
     return (
         <>
             <div className="bg-white p-8 rounded-lg shadow-lg w-full mt-[10px]">
