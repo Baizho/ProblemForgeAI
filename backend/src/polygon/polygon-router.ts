@@ -4,7 +4,7 @@ import PolygonController from "./polygon-controller";
 const polygonRouter = Router();
 
 polygonRouter.post("/create-problem", PolygonController.createNewProblem);
-polygonRouter.post("/save-file", PolygonController.saveFile);
+polygonRouter.post("/save-file-generator", PolygonController.saveFileGenerator);
 polygonRouter.post("/build-package", PolygonController.buildPackage);
 polygonRouter.post("/commit-changes", PolygonController.commitChanges);
 polygonRouter.post("/update-tests", PolygonController.updateTests);
@@ -13,6 +13,6 @@ polygonRouter.post("/update-constraints", PolygonController.updateConstraints);
 polygonRouter.post("/update-statement", PolygonController.updateStatement);
 polygonRouter.post("/update-checker", PolygonController.updateChecker);
 polygonRouter.post("/update-solution", PolygonController.updateSolution);
-polygonRouter.get("/get-problem-by-id", PolygonController.getProblemById);
+polygonRouter.post("/get-problem-by-id", PolygonController.getProblemById);
 
 export default polygonRouter;

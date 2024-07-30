@@ -12,10 +12,10 @@ const PolygonController = {
         }
     },
 
-    async saveFile(req: Request, res: Response) {
-        const { type, file, sourceType, apiKey, apiSecret } = req.body;
+    async saveFileGenerator(req: Request, res: Response) {
+        const { id, name, file, apiKey, apiSecret } = req.body;
         try {
-            await PolygonService.saveFile(type, file, sourceType, apiKey, apiSecret);
+            await PolygonService.saveFileGenerator(id, name, file, apiKey, apiSecret);
             res.sendStatus(200);
         } catch (err: any) {
             res.status(500).json({ error: err.message });

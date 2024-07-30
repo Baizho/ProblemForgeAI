@@ -56,19 +56,21 @@ const getLink = async (slug: string, request: ApiParam[], apiKey: string, apiSec
 };
 
 const PolygonService = {
-    async saveFile(type: string, file: string, sourceType: string, apiKey: string, apiSecret: string) {
+    async saveFileGenerator(id: number, name: string, file: string, apiKey: string, apiSecret: string) {
         try {
             const link = await getLink("/problem.saveFile?", [
                 { param: "apiKey", value: apiKey },
                 { param: "time", value: Math.round(Date.now() / 1000).toString() },
-                { param: "type", value: type },
+                { param: "problemId", value: id.toString() },
+                { param: "type", value: "source" },
+                { param: "name", value: name },
                 { param: "file", value: file },
-                { param: "sourceType", value: sourceType }
+                { param: "sourceType", value: "cpp.gcc13-64-winlibs-g++20" }
             ], apiKey, apiSecret)
 
             await axiosPolygonInstance.get(link);
         } catch (err: any) {
-            console.log(`There was an error in saving file of type ${type}`, err);
+            console.log(`There was an error in saving file of generator}`, err);
         }
     },
 
