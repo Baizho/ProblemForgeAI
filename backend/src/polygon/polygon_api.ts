@@ -29,6 +29,31 @@ interface ProblemProp {
     modified: boolean;
 }
 
+
+interface responseProp {
+    createdProblem: boolean,
+    updatedConstraints: boolean,
+    updatedStatement: boolean,
+    updatedChecker: boolean,
+    updatedSolution: boolean,
+    updatedSample: boolean,
+    updatedTests: boolean,
+    commitedChanges: boolean,
+    builtPackage: boolean
+}
+
+let result: responseProp = {
+    createdProblem: false,
+    updatedConstraints: false,
+    updatedStatement: false,
+    updatedChecker: false,
+    updatedSolution: false,
+    updatedSample: false,
+    updatedTests: false,
+    commitedChanges: false,
+    builtPackage: false
+};
+
 const sortApiParams = (params: ApiParam[]): ApiParam[] => {
     return params.sort((a, b) => {
         if (a.param > b.param) return 1;
@@ -84,8 +109,21 @@ export default async function polygonAddProblemApi(
     const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
     if (!api_key || !api_secret) return;
 
+    result = {
+        createdProblem: false,
+        updatedConstraints: false,
+        updatedStatement: false,
+        updatedChecker: false,
+        updatedSolution: false,
+        updatedSample: false,
+        updatedTests: false,
+        commitedChanges: false,
+        builtPackage: false
+    };
+
     try {
         const problem = await createNewProblem(title, api_key, api_secret);
+        // console.log(problem);
         // const problem = { id: 370833 };
         if (problem) {
             await Promise.all([
@@ -96,16 +134,16 @@ export default async function polygonAddProblemApi(
                 updateSample(problem.id, testInput, testOutput, api_key, api_secret),
                 updateTests(problem.id, tests, api_key, api_secret),
             ])
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating 2-second process
             await commitChanges(problem.id, api_key, api_secret);
             await buildPackage(problem.id, api_key, api_secret);
-            return "Problem created successfully!";
-        } else {
-            return "Error";
         }
         console.log("Polygon finished");
     } catch (err: any) {
         console.error("erorr happened in adding to polygon");
     }
+    // console.log(result);
+    return result;
 
 }
 
@@ -120,6 +158,7 @@ async function buildPackage(id: number, apiKey: string, apiSecret: string) {
 
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.builtPackage = true;
     } catch (err: any) {
         console.log("There is an error in building a package", err);
     }
@@ -134,6 +173,7 @@ async function commitChanges(id: number, apiKey: string, apiSecret: string) {
             { param: "minorChanges", value: "true" }
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.commitedChanges = true;
     } catch (err: any) {
         console.log("There is an error in comitting changes", err);
     }
@@ -153,6 +193,7 @@ async function updateTests(id: number, tests: string[], apiKey: string, apiSecre
 
             await axiosPolygonInstance.get(link);
         });
+        result.updatedTests = true;
     } catch (err: any) {
         console.log("There was an error adding sample tests", err);
     }
@@ -171,6 +212,7 @@ async function updateSample(id: number, testInput: string, testOutput: string, a
         ], apiKey, apiSecret);
 
         await axiosPolygonInstance.get(link);
+        result.updatedSample = true;
     } catch (err: any) {
         console.log("There was an error adding sample tests", err);
     }
@@ -186,6 +228,7 @@ async function createNewProblem(title: string, apiKey: string, apiSecret: string
             { param: "name", value: problemName }
         ], apiKey, apiSecret);
         const res = await axiosPolygonInstance.get(link);
+        result.createdProblem = true;
         return res.data.result;
     } catch (err) {
         console.error("There was an error creating a new problem using API", err);
@@ -202,6 +245,7 @@ async function updateConstraints(id: number, timeLimit: number, memoryLimit: num
             { param: "memoryLimit", value: memoryLimit.toString() }
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.updatedConstraints = true;
     } catch (err) {
         console.error("There is an error updating constraints", err);
     }
@@ -232,6 +276,7 @@ async function updateStatement(
             { param: "notes", value: notes }
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.updatedStatement = true;
     } catch (err) {
         console.error("There is an error updating statement", err);
     }
@@ -246,6 +291,7 @@ async function updateChecker(id: number, checker: string, apiKey: string, apiSec
             { param: "checker", value: checker },
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.updatedChecker = true;
     } catch (err: any) {
         console.log("There is an error updating checker", err);
     }
@@ -262,6 +308,7 @@ async function updateSolution(id: number, solution: string, userLang: string, ap
             { param: "file", value: solution }
         ], apiKey, apiSecret);
         await axiosPolygonInstance.get(link);
+        result.updatedSolution = true;
     } catch (err: any) {
         console.log("There is an error updating solution", err);
     }

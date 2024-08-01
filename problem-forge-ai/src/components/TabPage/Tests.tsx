@@ -80,6 +80,27 @@ const Tests = ({ testFiles, setTestFiles, handleTests, countTests, setCountTests
         }
     }
 
+    const downloadTestFile = (testContent: BlobPart, fileName: string) => {
+        const blob = new Blob([testContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Clean up the object URL
+    };
+
+    const handleTestsDownload = () => {
+        {
+            testFiles.map((testContent, index) => {
+                const fileName = `test_${formatNumber(index + 1, countTests.toString().length)}`;
+                downloadTestFile(testContent, fileName);
+            })
+        }
+    }
+
     return (
         <div className='max-h-[500px]'>
 
@@ -89,55 +110,76 @@ const Tests = ({ testFiles, setTestFiles, handleTests, countTests, setCountTests
                         <label htmlFor="number-of-tests" className="block text-gray-700 text-md font-bold">Number of tests:</label>
                         <input value={countTests} onChange={((e) => { const num = parseInt(e.target.value); { setCountTests(num) } })} type="number" id="number-of-tests" className="font-mono shadow appearance-none border rounded w-24 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2" placeholder="10" min="5" max="99" />
                     </div>
-                    <button type="submit" className=" font-raleway bg-blue-500 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Generate Tests</button>
+                    <button type="submit" className="text-xs md:text-sm font-raleway bg-blue-500 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Generate Tests</button>
                 </form>
             </div>
             <div className="py-4">
-                <button
-                    onClick={handleButtonClick}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-32"
-                >
-                    Add Test
-                </button>
+                {!showTextarea && (
+                    <button
+                        onClick={handleButtonClick}
+                        className="bg-blue-500 text-xs md:text-sm   text-white px-4 py-2 rounded-md hover:bg-blue-600 w-40"
+                    >
+                        Add Custom Test
+                    </button>
+                )}
                 {showTextarea && (
-                    <div className="mt-4">
-                        <textarea
-                            value={testText}
-                            onChange={handleTextareaChange}
-                            placeholder="Write your test here..."
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                        />
+                    <>
                         <button
-                            onClick={handleTextareaSubmit}
-                            className="mt-2 bg-green-500 text-white px-4 py-2 w-32 rounded-md hover:bg-green-600"
+                            onClick={handleButtonClick}
+                            className="bg-blue-900 text-xs md:text-sm   text-white px-4 py-2 rounded-md hover:bg-blue-950 w-40"
                         >
-                            Submit Test
+                            Add Custom Test
                         </button>
-                        <div className="mt-2">
-                            <label className="block mb-2 text-gray-700">
-                                Or upload .txt files:
-                            </label>
-                            <input
-                                type="file"
-                                accept=".txt"
-                                onChange={(e) => { handleFileUpload(e) }}
-                                className="block w-full text-sm text-gray-500
+                        <div className="mt-4">
+                            <textarea
+                                value={testText}
+                                onChange={handleTextareaChange}
+                                placeholder="Write your test here..."
+                                className="w-full p-2 border border-gray-300 rounded-md"
+                            />
+                            <button
+                                onClick={handleTextareaSubmit}
+                                className="mt-2 bg-green-500 text-white px-4 py-2 w-32 rounded-md hover:bg-green-600"
+                            >
+                                Submit Test
+                            </button>
+                            <div className="mt-2">
+                                <label className="block mb-2 text-gray-700">
+                                    Or upload .txt files:
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".txt"
+                                    onChange={(e) => { handleFileUpload(e) }}
+                                    className="block w-full text-sm text-gray-500
                          file:mr-4 file:py-2 file:px-4
                          file:rounded-full file:border-0
                          file:text-sm file:font-semibold
                          file:bg-blue-50 file:text-blue-700
                          hover:file:bg-blue-100"
-                                multiple
-                            />
-                            {fileContent && (
-                                <div className="mt-2 p-2 border border-gray-300 rounded-md bg-gray-50">
-                                    <p className="text-gray-700">File Content:</p>
-                                    <pre className="whitespace-pre-wrap">{fileContent}</pre>
-                                </div>
-                            )}
+                                    multiple
+                                />
+                                {fileContent && (
+                                    <div className="mt-2 p-2 border border-gray-300 rounded-md bg-gray-50">
+                                        <p className="text-gray-700">File Content:</p>
+                                        <pre className="whitespace-pre-wrap">{fileContent}</pre>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
+            </div>
+            <div className="flex flex-col items-center mt-4">
+                <div className="bg-red-100 text-red-700 text-sm p-2 mb-4 rounded-md max-w-md text-center font-raleway">
+                    The server may not be able to <b>upload to polygon</b> if the tests are too large. If it doesn't, please resort to downloading the files manually.
+                </div>
+                <button
+                    onClick={handleTestsDownload}
+                    className="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                >
+                    Download All Tests (.txt format)
+                </button>
             </div>
             {testLoading && (
                 <div className="text-center font-mono">Tests are loading...</div>

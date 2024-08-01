@@ -54,7 +54,7 @@ Here are some examples:
     }
 }
 
-Please generate a single competitive programming problem following these guidelines.`
+Please generate a single competitive programming problem following these guidelines in the language that was given to you!`
 
 const systemPromptTest = `You generate test cases for a competitive programming problem by writing a python script. 
 You provide only the Python code, without explanations.`;

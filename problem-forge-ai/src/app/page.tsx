@@ -26,10 +26,27 @@ interface Difficulty {
   color: string;
 }
 
+interface responseProp {
+  createdProblem: boolean,
+  updatedConstraints: boolean,
+  updatedStatement: boolean,
+  updatedChecker: boolean,
+  updatedSolution: boolean,
+  updatedSample: boolean,
+  updatedTests: boolean,
+  commitedChanges: boolean,
+  builtPackage: boolean
+}
+
+interface Language {
+  label: string;
+  value: string;
+}
+
 export default function Home() {
   const router = useRouter();
   const [idea, setIdea] = useState("");
-  const [language, setLanguage] = useState("english");
+  const [language, setLanguage] = useState<Language>({ label: "English", value: "english" });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
@@ -100,7 +117,7 @@ export default function Home() {
         ideaPrompt: idea,
         problemTopic: selectedTags.join(","),
         problemLevel: selectedDifficulty?.label,
-        problemLanguage: language
+        problemLanguage: language.value
       });
       const problem = res.data.message;
       // console.log(problem);
@@ -178,18 +195,21 @@ export default function Home() {
         sol: sol,
         timeLimit: timeLimit,
         memoryLimit: memoryLimit,
-        problemLanguage: language,
+        problemLanguage: language.value,
         userLang: userLang,
         apiKey: apiKey,
         apiSecret: secret,
       });
-      const response = res.data;
-      if (response.message === "Problem created successfully!") {
-        alert("success, added to polygon!");
-      } else {
+      const response: responseProp = res.data.resp;
+      console.log(response);
+      if (!response.builtPackage || !response.commitedChanges) {
         alert("error in sending to polygon. Maybe polygon is down or has verification on! There might be a contest going on!");
         setPolygonLoading(false);
       }
+      else if (!response.updatedTests) {
+        alert("Problem created! However, tests were too large for the server! You will have to manually add them (Look at the steps for further information)")
+      }
+      else alert("success, added to polygon!");
       setIsProcessComplete(true);
     } catch (err: any) {
       alert("error in sending to polygon. Maybe polygon is down or has verification on! There might be a contest going on!");
@@ -198,7 +218,7 @@ export default function Home() {
   }
 
   const generateSolution = async () => {
-    if (!title || !statement || !input || !output || !testInput || !testOutput) {
+    if (!title || !statement || !input || !output) {
       alert("make sure to fill in title, statement, input, output");
       return;
     }

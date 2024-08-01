@@ -17,7 +17,7 @@ const Navbar: React.FC<Props> = ({ userLang, setUserLang, userTheme, setUserThem
     const languages: { value: string; label: string }[] = [
         { value: "c", label: "C" },
         { value: "cpp", label: "C++" },
-        { value: "py", label: "Python" },
+        { value: "python3", label: "Python" },
         { value: "java", label: "Java" },
     ];
 

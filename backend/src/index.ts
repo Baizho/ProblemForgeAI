@@ -60,31 +60,52 @@ app.post("/generateTests", async (req: Request, res: Response) => {
     const generate_code = await geminiService.generateTestGenerater(input, output, testInput, testOutput);
     // console.log(generate_code);
 
-    let data = qs.stringify({
-      'code': generate_code,
-      'language': 'py',
-      'input': number.toString()
-    });
-    var config = {
-      method: 'post',
-      url: 'https://api.codex.jaagrav.in',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
+    // let data = qs.stringify({
+    //   'code': generate_code,
+    //   'language': 'py',
+    //   'input': number.toString()
+    // });
+    // var config = {
+    //   method: 'post',
+    //   url: 'https://api.codex.jaagrav.in',
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   data: data
+    // };
 
     try {
       console.log("Generating tests");
-      const output = await axios(config)
-        .then(function (response) {
-          // console.log(JSON.stringify(response.data));
-          if (response.data.error) return response.data.error;
-          return response.data.output;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      // const encodedParams = new URLSearchParams();
+      // encodedParams.append("code", generate_code);
+      // encodedParams.append("language", 'py');
+      // encodedParams.append("input", number.toString());
+
+      // const options = {
+      //   method: 'POST',
+      //   url: 'https://codex7.p.rapidapi.com/',
+      //   headers: {
+      //     'content-type': 'application/x-www-form-urlencoded',
+      //     'X-RapidAPI-Host': 'codex7.p.rapidapi.com',
+      //     'X-RapidAPI-Key': 'fcc2d6c6b3msh404adbe533c36f5p148528jsn4a93557ee62f'
+      //   },
+      //   encodedParams
+      // };
+      // const output = await axios.request(options).then(function (response) {
+      //   if (response.data.error) return response.data.error;
+      //   return response.data.output;
+      // }).catch(function (error) {
+      //   console.error(error);
+      // });
+
+      const output = await axios.post("https://code-box.onrender.com/api/v1/submit", {
+        src: generate_code,
+        stdin: number.toString(),
+        lang: "python3"
+      }).then(res => {
+        return res.data.data.output;
+      })
+
       // console.log("finished compile", output);
       console.log("finished output");
       res.status(201).json({ tests: JSON.parse(output.replace(/'/g, '"')) });
@@ -124,7 +145,7 @@ app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
   try {
     console.log("adding");
     const resp = await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret);
-    res.status(201).json({ message: resp });
+    res.status(201).json({ resp });
   } catch (err: any) {
     console.error("Error creating problem with API", err);
     res.status(500).json({ message: "Error creating problem", err });
@@ -142,32 +163,39 @@ app.post("/compile", async (req, res) => {
   let language = req.body.language;
   let input = req.body.input;
   //calling the code compilation API
-  let data = qs.stringify({
-    'code': code,
-    'language': language,
-    'input': input
-  });
-  var config = {
-    method: 'post',
-    url: 'https://api.codex.jaagrav.in',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    data: data
-  };
+  // let data = qs.stringify({
+  //   'code': code,
+  //   'language': language,
+  //   'input': input
+  // });
+  // var config = {
+  //   method: 'post',
+  //   url: 'https://api.codex.jaagrav.in',
+  //   headers: {
+  //     'Content-Type': 'application/x-www-form-urlencoded'
+  //   },
+  //   data: data
+  // };
 
   try {
     // console.log("sending compile", code);
     console.log("sending compile")
-    const output = await axios(config)
-      .then(function (response) {
-        // console.log(JSON.stringify(response.data));
-        if (response.data.error) return response.data.error;
-        return response.data.output;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    // const output = await axios(config)
+    //   .then(function (response) {
+    //     // console.log(JSON.stringify(response.data));
+    //     if (response.data.error) return response.data.error;
+    //     return response.data.output;
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    const output = await axios.post("https://code-box.onrender.com/api/v1/submit", {
+      src: code,
+      stdin: input,
+      lang: language
+    }).then(res => {
+      return res.data.data.output;
+    })
     // console.log("finished compile", output);
     console.log("finished output");
     res.status(201).json(output);
