@@ -35,7 +35,7 @@ const claudeAI = new Anthropic({ apiKey: process.env.CLAUDE_KEY });
 const systemPromptProblem = `
 Generate a competitive programming problem using the following guidelines:
 
-1. Structure the problem with these sections: title, statement, input, output, and example.
+1. Structure the problem with these sections: title, statement, input, output, and example, EnglishInput, EnglishOutput.
 2. Use the Codeforces Polygon style format.
 3. Do not create IOI-style or interactive problems.
 4. For LaTeX formatting:
@@ -52,9 +52,11 @@ Generate a competitive programming problem using the following guidelines:
         "outputExample": "Sample output",
         "explanation": "Explanation of the example"
     }
+    "EnglishInput": "Input description in English",
+    "EnglishOutput" : "Output description in English"
 }
 
-6. The problem can be in any language.
+6. The problem can be in any language, the EnglishInput and EnglishOutput should always be in English though.
 
 
 Please generate a single competitive programming problem following these guidelines.`

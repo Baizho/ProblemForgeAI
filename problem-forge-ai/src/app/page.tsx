@@ -75,6 +75,8 @@ export default function Home() {
   const [statement, setStatement] = useState("");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [enginput, setengInput] = useState("");
+  const [engoutput, setengOutput] = useState("");
   const [testInput, setTestInput] = useState("");
   const [testOutput, setTestOutput] = useState("");
   const [notes, setNotes] = useState("");
@@ -128,6 +130,9 @@ export default function Home() {
       setTestInput(problem.example.inputExample);
       setTestOutput(problem.example.outputExample);
       setNotes(problem.example.explanation);
+      setengInput(problem.EnglishInput);
+      setengOutput(problem.EnglishOutput);
+      // console.log(problem.EnglishInput, problem.EnglishOutput)
       setTestFiles([]);
     } catch (err: any) {
       alert("Sorry, there was an error generating the problem, please explain in more detail or create something easier.");
@@ -146,8 +151,8 @@ export default function Home() {
     try {
       const res = await axiosBackInstance.post("/generateTests", {
         number: countTests,
-        input: input,
-        output: output,
+        input: enginput,
+        output: engoutput,
         testInput: testInput,
         testOutput: testOutput
       });
