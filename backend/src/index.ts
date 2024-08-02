@@ -19,6 +19,7 @@ import bodyParser from "body-parser";
 
 const app = express();
 const geminiService = new GeminiService();
+const claudeService = new ClaudeService();
 
 // Middleware setup
 
@@ -139,12 +140,12 @@ app.post("/polygonAddProblemPuppeteer", async (req: Request, res: Response) => {
 // Create Polygon problem using API
 app.post("/polygonAddProblemApi", async (req: Request, res: Response) => {
   // console.log(encodeURIComponent("//\ hello @#@  "));
-  const { title, statement, input, output, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret } = req.body;
-  let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
-
+  const { title, statement, input, output, engoutput, testInput, testOutput, notes, tests, user, sol, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret } = req.body;
+  // let solution: string = sol || await geminiService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
+  let solution: string = sol || await claudeService.generateSolution(statement, input, output, testInput, testOutput, notes, timeLimit, memoryLimit, userLang);
   try {
     console.log("adding");
-    const resp = await polygonAddProblemApi(title, statement, input, output, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret);
+    const resp = await polygonAddProblemApi(title, statement, input, output, engoutput, testInput, testOutput, notes, tests, user, solution, timeLimit, memoryLimit, problemLanguage, userLang, apiKey, apiSecret);
     res.status(201).json({ resp });
   } catch (err: any) {
     console.error("Error creating problem with API", err);

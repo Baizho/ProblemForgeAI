@@ -150,6 +150,7 @@ class GeminiService {
 
     async getChecker(output: string): Promise<string> {
         try {
+            console.log(output);
             const res = await genModelChecker.generateContent(`
             You have to choose a checker that best suites this output: ${output}.
             Options are given in the format: "name" - "format".

@@ -192,6 +192,7 @@ export default function Home() {
         statement: statement,
         input: input,
         output: output,
+        engoutput: engoutput,
         testInput: testInput,
         testOutput: testOutput,
         notes: notes,

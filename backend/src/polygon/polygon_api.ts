@@ -91,6 +91,7 @@ export default async function polygonAddProblemApi(
     statement: string,
     input: string,
     output: string,
+    engoutput: string,
     testInput: string,
     testOutput: string,
     notes: string,
@@ -106,7 +107,7 @@ export default async function polygonAddProblemApi(
 ) {
     console.log("Running polygon!");
 
-    const checker = await geminiService.getChecker(output), api_key = apiKey, api_secret = apiSecret;
+    const checker = await geminiService.getChecker(engoutput), api_key = apiKey, api_secret = apiSecret;
     if (!api_key || !api_secret) return;
 
     result = {
@@ -134,7 +135,7 @@ export default async function polygonAddProblemApi(
                 updateSample(problem.id, testInput, testOutput, api_key, api_secret),
                 updateTests(problem.id, tests, api_key, api_secret),
             ])
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating 2-second process
+            await new Promise(resolve => setTimeout(resolve, 3000)); // Simulating 3-second process
             await commitChanges(problem.id, api_key, api_secret);
             await buildPackage(problem.id, api_key, api_secret);
         }
@@ -220,7 +221,7 @@ async function updateSample(id: number, testInput: string, testOutput: string, a
 
 async function createNewProblem(title: string, apiKey: string, apiSecret: string): Promise<ProblemProp | undefined> {
     try {
-        let problemName = `${title.replace(/[^a-zA-Z]/g, "").replace(/\s+/g, "-").toLowerCase()}-${uuid4()}`;
+        let problemName = `latestproblem-${uuid4()}`;
         problemName = (problemName.length > 64 ? problemName.substring(0, 64) : problemName);
         const link = await getLink("/problem.create?", [
             { param: "apiKey", value: apiKey },

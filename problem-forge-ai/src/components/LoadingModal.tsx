@@ -85,7 +85,7 @@ const LoadingModal = ({ isLoading, isProcessComplete, onClose }: Props) => {
                         </div>
                     </div>
 
-                    <div className="mb-4 w-[100%] md:w-[70%] xl:w-[70%] 2xl:w-[60%] aspect-video ">
+                    <div className="mb-4 w-[100%] md:w-[90%] xl:w-[85%] 2xl:w-[60%] aspect-video ">
                         <div className='relative w-full h-full border-[1px]'>
                             <Image
                                 src={steps[currentStep].src}
