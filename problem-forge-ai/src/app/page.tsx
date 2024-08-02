@@ -123,6 +123,7 @@ export default function Home() {
       });
       const problem = res.data.message;
       // console.log(problem);
+
       setTitle(problem.title);
       setStatement(problem.statement);
       setInput(problem.input);
