@@ -136,8 +136,10 @@ export default async function polygonAddProblemApi(
                 updateTests(problem.id, tests, api_key, api_secret),
             ])
             await new Promise(resolve => setTimeout(resolve, 3000)); // Simulating 3-second process
-            await commitChanges(problem.id, api_key, api_secret);
-            await buildPackage(problem.id, api_key, api_secret);
+            if (result.createdProblem && result.updatedChecker && result.updatedConstraints && result.updatedSample && result.updatedStatement && result.updatedSolution) {
+                await commitChanges(problem.id, api_key, api_secret);
+                await buildPackage(problem.id, api_key, api_secret);
+            }
         }
         console.log("Polygon finished");
     } catch (err: any) {
@@ -182,21 +184,28 @@ async function commitChanges(id: number, apiKey: string, apiSecret: string) {
 
 async function updateTests(id: number, tests: string[], apiKey: string, apiSecret: string) {
     try {
-        tests.forEach(async (testInput, index) => {
-            const link = await getLink("/problem.saveTest?", [
-                { param: "apiKey", value: apiKey },
-                { param: "time", value: Math.round(Date.now() / 1000).toString() },
-                { param: "problemId", value: id.toString() },
-                { param: "testset", value: "tests" },
-                { param: "testIndex", value: (index + 2).toString() },
-                { param: "testInput", value: testInput },
-            ], apiKey, apiSecret);
-
-            await axiosPolygonInstance.get(link);
-        });
-        result.updatedTests = true;
+        let ok = 1, index = 0;
+        for await (const testInput of tests) {
+            try {
+                const link = await getLink("/problem.saveTest?", [
+                    { param: "apiKey", value: apiKey },
+                    { param: "time", value: Math.round(Date.now() / 1000).toString() },
+                    { param: "problemId", value: id.toString() },
+                    { param: "testset", value: "tests" },
+                    { param: "testIndex", value: (index + 2).toString() },
+                    { param: "testInput", value: testInput },
+                ], apiKey, apiSecret);
+                index++;
+                await axiosPolygonInstance.get(link);
+            } catch (err: any) {
+                ok = 0;
+                console.error("There was an error adding tests", err);
+                break;
+            }
+        };
+        if (ok) result.updatedTests = true;
     } catch (err: any) {
-        console.log("There was an error adding sample tests", err);
+        console.log("There was an error adding tests", err);
     }
 }
 

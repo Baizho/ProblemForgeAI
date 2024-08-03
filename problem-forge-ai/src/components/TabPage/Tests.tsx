@@ -182,7 +182,7 @@ const Tests = ({ testFiles, setTestFiles, handleTests, countTests, setCountTests
                 </button>
             </div>
             {testLoading && (
-                <div className="text-center font-mono">Tests are loading...</div>
+                <div className="text-center font-mono">Tests are loading...(Please wait 1-2 minutes)</div>
             )}
             <div className="mt-2 overflow-y-auto min-h-[400px] max-h-[100%]">
                 {testFiles.map((file, index) => {
