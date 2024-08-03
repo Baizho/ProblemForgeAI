@@ -8,8 +8,12 @@ import axios from "axios";
 //     baseURL: 'https://olympath-ai-backend.vercel.app', // Replace with your API base URL
 // });
 
+// const axiosBackInstance = axios.create({
+//     baseURL: 'http://143.198.113.173:3000', // Replace with your API base URL
+// });
+
 const axiosBackInstance = axios.create({
-    baseURL: 'http://143.198.113.173:3000', // Replace with your API base URL
+    baseURL: 'https://problemforgeai-production.up.railway.app', // Replace with your API base URL
 });
 
 // Request interceptor
