@@ -135,7 +135,8 @@ export default async function polygonAddProblemApi(
                 updateSample(problem.id, testInput, testOutput, api_key, api_secret),
                 updateTests(problem.id, tests, api_key, api_secret),
             ])
-            await new Promise(resolve => setTimeout(resolve, 3000)); // Simulating 3-second process
+            console.log(problem);
+            console.log(result);
             if (result.createdProblem && result.updatedChecker && result.updatedConstraints && result.updatedSample && result.updatedStatement && result.updatedSolution) {
                 await commitChanges(problem.id, api_key, api_secret);
                 await buildPackage(problem.id, api_key, api_secret);
