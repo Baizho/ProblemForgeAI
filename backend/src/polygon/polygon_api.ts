@@ -188,7 +188,7 @@ async function commitChanges(id: number, apiKey: string, apiSecret: string) {
 async function updateTests(id: number, tests: string[], apiKey: string, apiSecret: string) {
     try {
         let ok = 1, index = 0;
-        for await (const testInput of tests) {
+        for (const testInput of tests) {
             try {
                 const link = await getLink("/problem.saveTest?", [
                     { param: "apiKey", value: apiKey },
