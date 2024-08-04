@@ -127,12 +127,12 @@ export default async function polygonAddProblemApi(
         // console.log(problem);
         // const problem = { id: 370833 };
         if (problem) {
+            await updateSample(problem.id, testInput, testOutput, api_key, api_secret),
             await Promise.all([
                 updateConstraints(problem.id, timeLimit, memoryLimit, api_key, api_secret),
                 updateStatement(problem.id, title, statement, input, output, notes, problemLanguage, api_key, api_secret),
                 updateChecker(problem.id, checker, api_key, api_secret),
                 updateSolution(problem.id, solution, userLang, api_key, api_secret),
-                updateSample(problem.id, testInput, testOutput, api_key, api_secret),
                 updateTests(problem.id, tests, api_key, api_secret),
             ])
             console.log(problem);
