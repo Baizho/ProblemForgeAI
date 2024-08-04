@@ -163,6 +163,7 @@ async function buildPackage(id: number, apiKey: string, apiSecret: string) {
         await axiosPolygonInstance.get(link);
         result.builtPackage = true;
     } catch (err: any) {
+        result.builtPackage = false;
         console.log("There is an error in building a package", err);
     }
 }
@@ -178,6 +179,7 @@ async function commitChanges(id: number, apiKey: string, apiSecret: string) {
         await axiosPolygonInstance.get(link);
         result.commitedChanges = true;
     } catch (err: any) {
+        result.commitedChanges = false;
         console.log("There is an error in comitting changes", err);
     }
 }
@@ -204,7 +206,9 @@ async function updateTests(id: number, tests: string[], apiKey: string, apiSecre
             }
         };
         if (ok) result.updatedTests = true;
+        else result.updatedTests = false;
     } catch (err: any) {
+        result.updatedTests = false;
         console.log("There was an error adding tests", err);
     }
 }
@@ -224,6 +228,7 @@ async function updateSample(id: number, testInput: string, testOutput: string, a
         await axiosPolygonInstance.get(link);
         result.updatedSample = true;
     } catch (err: any) {
+        result.updatedSample = false;
         console.log("There was an error adding sample tests", err);
     }
 }
@@ -241,6 +246,7 @@ async function createNewProblem(title: string, apiKey: string, apiSecret: string
         result.createdProblem = true;
         return res.data.result;
     } catch (err) {
+        result.createdProblem = false;
         console.error("There was an error creating a new problem using API", err);
     }
 }
@@ -257,6 +263,7 @@ async function updateConstraints(id: number, timeLimit: number, memoryLimit: num
         await axiosPolygonInstance.get(link);
         result.updatedConstraints = true;
     } catch (err) {
+        result.updatedConstraints = false;
         console.error("There is an error updating constraints", err);
     }
 }
@@ -288,6 +295,7 @@ async function updateStatement(
         await axiosPolygonInstance.get(link);
         result.updatedStatement = true;
     } catch (err) {
+        result.updatedStatement = false;
         console.error("There is an error updating statement", err);
     }
 }
@@ -303,6 +311,7 @@ async function updateChecker(id: number, checker: string, apiKey: string, apiSec
         await axiosPolygonInstance.get(link);
         result.updatedChecker = true;
     } catch (err: any) {
+        result.updatedChecker = false;
         console.log("There is an error updating checker", err);
     }
 }
@@ -320,6 +329,7 @@ async function updateSolution(id: number, solution: string, userLang: string, ap
         await axiosPolygonInstance.get(link);
         result.updatedSolution = true;
     } catch (err: any) {
+        result.updatedSolution = false;
         console.log("There is an error updating solution", err);
     }
 }
